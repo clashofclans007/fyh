@@ -87,6 +87,15 @@ app.get('/api/v1/ls', function(req, res){
 });
 
 /**
+ * Download selected file.
+ */
+app.get('/api/v1/download', function(req, res){
+    var currentPath = path.normalize(req.query.path || '/');
+    var realPath = config.repository + currentPath;
+    res.sendfile(realPath);
+});
+
+/**
  * Stream selected video file
  */
 app.get('/api/v1/stream', function(req, res){

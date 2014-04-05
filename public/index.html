@@ -34,6 +34,7 @@
             <thead>
                 <tr>
                     <th style="width: 30px"></th>
+                    <th style="width: 30px"></th>
                     <th>Name</th>
                     <th style="width: 120px;">Size</th>
                 </tr>
@@ -42,6 +43,7 @@
                 {{#each folders}}
                     <tr>
                         <td><span class="fa fa-folder"></span></td>
+                        <td></td>
                         <td><a href="javascript:;" {{action "open" path}}>{{name}}</a></td>
                         <td>{{totalSize}}</td>
                     </tr>
@@ -50,9 +52,11 @@
                     <tr>
                         {{#if isVideo}}
                             <td><span class="fa fa-video-camera"></span></td>
+                            <td><a href="/api/v1/download?path={{unbound path}}" target="_blank"><span class="fa fa-download"></span></a></td>
                             <td><span class="label label-success">Video</span> {{#link-to 'watch' path}}{{name}}{{/link-to}}</td>
                         {{else}}
                             <td><span class="fa fa-file"></span></td>
+                            <td><a href="/api/v1/download?path={{unbound path}}" target="_blank"><span class="fa fa-download"></span></a></td>
                             <td>{{name}}</td>
                         {{/if}}
                         <td>{{size}}</td>
