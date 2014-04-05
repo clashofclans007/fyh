@@ -5,6 +5,7 @@ $(function(){
 
     App.Router.map(function(){
         this.route('path');
+        this.route('watch', { path: '/watch/:path' });
     });
 
     App.IndexRoute = Ember.Route.extend({
@@ -13,6 +14,7 @@ $(function(){
         }
     });
 
+    // Path Route
     App.PathRoute = Ember.Route.extend({
         model: function(){
             return Ember.$.getJSON('/api/v1/ls').then(function(path){
@@ -22,6 +24,7 @@ $(function(){
         }
     });
 
+    // Path Controller
     App.PathController = Ember.ObjectController.extend({
         breadcrumbs: [],
         actions: {
@@ -41,6 +44,16 @@ $(function(){
                     currentObject.set('model', path);
                 });
             }
+        }
+    });
+
+    // Watch Route
+    App.WatchRoute = Ember.Route.extend({
+        model: function(params){
+            return Ember.$.getJSON('/api/v1/stream', { path: params.path}).then(function(stream){
+                console.log(stream);
+                return stream;
+            });
         }
     });
 }());

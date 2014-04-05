@@ -1,3 +1,5 @@
 module.exports = {
-    repository: '/Users/omer/Downloads'
-}
+    repository: '/Users/omer/Downloads',
+    streamUrl: '127.0.0.1',
+    streamPortRange: [9000, 9999]
+};

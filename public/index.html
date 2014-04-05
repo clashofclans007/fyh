@@ -10,50 +10,66 @@
 </head>
 <body>
     <script type="text/x-handlebars">
-        {{ outlet }}
-    </script>
-
-    <script type="text/x-handlebars" id="path">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h1>Files</h1>
-                    <div>
-                        <ol class="breadcrumb">
-                            <li><a href="javascript:;" {{action "open" "/"}}>Root</a></li>
-                            {{#each breadcrumbs}}
-                                <li></li>
-                                <li><a href="javascript:;" {{action "open" path}}>{{name}}</a></li>
-                            {{/each}}
-                        </ol>
-                    </div>
-                    <table class="table table-bordered table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th style="width: 30px"></th>
-                                <th>Name</th>
-                                <th style="width: 120px;">Size</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each folders}}
-                                <tr>
-                                    <td><span class="fa fa-folder"></span></td>
-                                    <td><a href="javascript:;" {{action "open" path}}>{{name}}</a></td>
-                                    <td>{{totalSize}}</td>
-                                </tr>
-                            {{/each}}
-                            {{#each files}}
-                                <tr>
-                                    <td><span class="fa fa-file"></span></td>
-                                    <td><a href="javascript:;" class="action-open-file">{{name}}</a></td>
-                                    <td>{{size}}</td>
-                                </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
+                    {{ outlet }}
                 </div>
             </div>
+        </div>
+    </script>
+
+    <script type="text/x-handlebars" id="path">
+        <h1>Files</h1>
+        <div>
+            <ol class="breadcrumb">
+                <li><a href="javascript:;" {{action "open" "/"}}>Root</a></li>
+                {{#each breadcrumbs}}
+                    <li></li>
+                    <li><a href="javascript:;" {{action "open" path}}>{{unbound name}}</a></li>
+                {{/each}}
+            </ol>
+        </div>
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th style="width: 30px"></th>
+                    <th>Name</th>
+                    <th style="width: 120px;">Size</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each folders}}
+                    <tr>
+                        <td><span class="fa fa-folder"></span></td>
+                        <td><a href="javascript:;" {{action "open" path}}>{{name}}</a></td>
+                        <td>{{totalSize}}</td>
+                    </tr>
+                {{/each}}
+                {{#each files}}
+                    <tr>
+                        {{#if isVideo}}
+                            <td><span class="fa fa-video-camera"></span></td>
+                            <td><span class="label label-success">Video</span> {{#link-to 'watch' path}}{{name}}{{/link-to}}</td>
+                        {{else}}
+                            <td><span class="fa fa-file"></span></td>
+                            <td>{{name}}</td>
+                        {{/if}}
+                        <td>{{size}}</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </script>
+
+    <script type="text/x-handlebars" id="watch">
+        <div>
+            {{#link-to 'path'}}Turn Back{{/link-to}}
+        </div>
+        <div style="text-align:center;">
+            <video controls>
+                <source src="{{unbound url}}" type="video/mp4" />
+            </video>
         </div>
     </script>
 
