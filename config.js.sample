@@ -1,0 +1,3 @@
+module.exports = {
+    repository: '/Users/omer/Downloads'
+}

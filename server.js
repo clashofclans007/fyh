@@ -3,6 +3,7 @@ var http    = require('http');
 var path    = require('path');
 var fs      = require('fs');
 var express = require('express');
+var config  = require('./config');
 
 /**
  * @see http://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript
@@ -31,7 +32,7 @@ app.use(function(req, res, next){
  */
 app.get('/api/v1/ls', function(req, res){
     var currentPath = path.normalize(req.query.path || '/');
-    var realPath = __dirname + currentPath;
+    var realPath = config.repository + currentPath;
     var pathInfo = fs.readdirSync(realPath);
     var files = [];
     var folders = [];
