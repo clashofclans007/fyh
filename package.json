@@ -1,0 +1,8 @@
+{
+    "name": "torrent-manager",
+    "version": "0.0.1",
+    "dependencies": {
+        "express": "3.x",
+        "underscore": "1.6.0"
+    }
+}
