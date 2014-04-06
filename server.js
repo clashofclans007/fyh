@@ -10,6 +10,7 @@ var fs      = require('fs');
 var srt     = require('subtitles-parser');
 var express = require('express');
 var unzip   = require('unzip');
+var exec    = require('child_process').exec;
 var config  = require('./config');
 
 /**
@@ -192,12 +193,22 @@ app.get('/api/v1/stream', function(req, res){
 app.get('/api/v1/extract', function(req, res){
     var currentPath = path.normalize(req.query.path || '/');
     var realPath = config.repository + currentPath;
-    var basename = path.basename(realPath, path.extname(realPath));
+    var extname = path.extname(realPath);
+    var basename = path.basename(realPath, extname);
     var output = path.dirname(realPath) + '/' + basename;
 
-    fs.createReadStream(realPath).pipe(unzip.Extract({path: output})).on('close', function(){
+    if (extname == '.zip') {
+        fs.createReadStream(realPath).pipe(unzip.Extract({path: output})).on('end', function(){
+            res.send({});
+        });
+    } else if (extname == '.rar') {
+        console.log("unrar x '" + realPath + "' '" + output + "/'");
+        exec("unrar x '" + realPath + "' '" + output + "/'", function(error, stdout, stderr){
+            res.send({});
+        });
+    } else {
         res.send({});
-    });
+    }
 });
 
 // Run server
