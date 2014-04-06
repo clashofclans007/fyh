@@ -44,13 +44,16 @@ $(function(){
                     console.log(path);
                     currentObject.set('model', path);
                 });
+            },
+            refresh: function(){
+                this.send('open', this.get('currentPath'));
             }
         }
     });
 
     // Path File Item Controller
     App.PathFileItemController = Ember.ObjectController.extend({
-        needs: ['video'],
+        needs: ['video', 'path'],
         isSelectedSubtitle: function(){
             var selectedSubtitle = this.get('controllers.video.subtitle');
             return selectedSubtitle != null && selectedSubtitle.name == this.get('name');
@@ -61,6 +64,12 @@ $(function(){
             },
             unsetSubtitle: function(){
                 this.set('controllers.video.subtitle', null);
+            },
+            extract: function(){
+                var currentObject = this;
+                return Ember.$.getJSON('/api/v1/extract', { path: this.get('path')}).then(function(){
+                    currentObject.get('controllers.path').send('refresh');
+                });
             }
         }
     });

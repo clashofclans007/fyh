@@ -58,6 +58,12 @@
                         {{/if}}
                     </div>
                 {{/if}}
+                {{#if isArchive}}
+                    <div style="margin-top: 10px;">
+                        <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
+                        <a href="javascript:;" class="pull-left" {{action 'extract'}}><span class="fa fa-archive"></span> Extract</a>
+                    </div>
+                {{/if}}
                 {{#if isNormal}}
                     <div style="margin-top: 10px;">
                         <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>

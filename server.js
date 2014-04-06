@@ -9,6 +9,7 @@ var path    = require('path');
 var fs      = require('fs');
 var srt     = require('subtitles-parser');
 var express = require('express');
+var unzip   = require('unzip');
 var config  = require('./config');
 
 /**
@@ -71,6 +72,8 @@ app.get('/api/v1/ls', function(req, res){
                 item.isVideo = true;
             } else if(extension == '.srt') {
                 item.isSubtitle = true;
+            } else if(extension == '.zip' || extension == '.rar') {
+                item.isArchive = true;
             } else {
                 item.isNormal = true;
             }
@@ -180,6 +183,20 @@ app.get('/api/v1/stream', function(req, res){
                 url: 'http://' + config.streamUrl + ':' + streamServer.address().port
             });
         });
+    });
+});
+
+/**
+ * Extract zip or rar file
+ */
+app.get('/api/v1/extract', function(req, res){
+    var currentPath = path.normalize(req.query.path || '/');
+    var realPath = config.repository + currentPath;
+    var basename = path.basename(realPath, path.extname(realPath));
+    var output = path.dirname(realPath) + '/' + basename;
+
+    fs.createReadStream(realPath).pipe(unzip.Extract({path: output})).on('close', function(){
+        res.send({});
     });
 });
 

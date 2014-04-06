@@ -5,6 +5,7 @@
         "express": "3.x",
         "underscore": "1.6.0",
         "async": "0.2.5",
-        "subtitles-parser": "latest"
+        "subtitles-parser": "latest",
+        "unzip": "0.1.8"
     }
 }
