@@ -5,7 +5,7 @@ $(function(){
 
     App.Router.map(function(){
         this.route('path');
-        this.route('watch', { path: '/watch/:path' });
+        this.route('video', { path: '/video/:path' });
     });
 
     App.IndexRoute = Ember.Route.extend({
@@ -26,6 +26,7 @@ $(function(){
 
     // Path Controller
     App.PathController = Ember.ObjectController.extend({
+        needs: ['video'],
         breadcrumbs: [],
         actions: {
             open: function(path){
@@ -43,17 +44,25 @@ $(function(){
                     console.log(path);
                     currentObject.set('model', path);
                 });
+            },
+            setSubtitle: function(name, path){
+                this.set('controllers.video.subtitle', {name: name, path: path});
             }
         }
     });
 
-    // Watch Route
-    App.WatchRoute = Ember.Route.extend({
+    // Video Route
+    App.VideoRoute = Ember.Route.extend({
         model: function(params){
             return Ember.$.getJSON('/api/v1/stream', { path: params.path}).then(function(stream){
                 console.log(stream);
                 return stream;
             });
         }
+    });
+
+    // Video Controller
+    App.VideoController = Ember.ObjectController.extend({
+        subtitle: null
     });
 }());

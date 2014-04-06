@@ -34,7 +34,6 @@
             <thead>
                 <tr>
                     <th style="width: 30px"></th>
-                    <th style="width: 30px"></th>
                     <th>Name</th>
                     <th style="width: 120px;">Size</th>
                 </tr>
@@ -43,22 +42,33 @@
                 {{#each folders}}
                     <tr>
                         <td><span class="fa fa-folder"></span></td>
-                        <td></td>
                         <td><a href="javascript:;" {{action "open" path}}>{{name}}</a></td>
                         <td>{{totalSize}}</td>
                     </tr>
                 {{/each}}
                 {{#each files}}
                     <tr>
-                        {{#if isVideo}}
-                            <td><span class="fa fa-video-camera"></span></td>
-                            <td><a href="/api/v1/download?path={{unbound path}}" target="_blank"><span class="fa fa-download"></span></a></td>
-                            <td><span class="label label-success">Video</span> {{#link-to 'watch' path}}{{name}}{{/link-to}}</td>
-                        {{else}}
-                            <td><span class="fa fa-file"></span></td>
-                            <td><a href="/api/v1/download?path={{unbound path}}" target="_blank"><span class="fa fa-download"></span></a></td>
-                            <td>{{name}}</td>
-                        {{/if}}
+                        <td><span class="fa fa-file"></span></td>
+                        <td>
+                            {{name}}
+                            {{#if isVideo}}
+                                <div style="margin-top:10px;">
+                                    <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
+                                    {{#link-to 'video' path}}<span class="fa fa-video-camera"></span> Watch{{/link-to}}
+                                </div>
+                            {{/if}}
+                            {{#if isSubtitle}}
+                                <div style="margin-top: 10px;">
+                                    <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
+                                    <a href="javascript:;" class="pull-left" {{action 'setSubtitle' name path}}><span class="fa fa-bars"></span> Set Subtitle</a>
+                                </div>
+                            {{/if}}
+                            {{#if isNormal}}
+                                <div style="margin-top: 10px;">
+                                    <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
+                                </div>
+                            {{/if}}
+                        </td>
                         <td>{{size}}</td>
                     </tr>
                 {{/each}}
@@ -66,12 +76,15 @@
         </table>
     </script>
 
-    <script type="text/x-handlebars" id="watch">
+    <script type="text/x-handlebars" id="video">
         <div>
             {{#link-to 'path'}}Turn Back{{/link-to}}
         </div>
         <div style="text-align:center;">
             <video controls>
+                {{#if subtitle}}
+                    <track kind="subtitles" label="{{unbound subtitle.name}}" src="/api/v1/subtitle?path={{unbound subtitle.path}}" default></track>
+                {{/if}}
                 <source src="{{unbound url}}" type="video/mp4" />
             </video>
         </div>

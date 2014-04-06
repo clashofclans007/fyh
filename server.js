@@ -7,6 +7,7 @@ var async   = require('async');
 var http    = require('http');
 var path    = require('path');
 var fs      = require('fs');
+var srt     = require('subtitles-parser');
 var express = require('express');
 var config  = require('./config');
 
@@ -65,8 +66,13 @@ app.get('/api/v1/ls', function(req, res){
         if (stat.isFile()) {
             item.size = bytesToSize(stat.size);
             // TODO : Check other formats
-            if (path.extname(item.path) == '.mp4') {
+            var extension = path.extname(item.path);
+            if (extension == '.mp4') {
                 item.isVideo = true;
+            } else if(extension == '.srt') {
+                item.isSubtitle = true;
+            } else {
+                item.isNormal = true;
             }
 
             files.push(item);
@@ -93,6 +99,26 @@ app.get('/api/v1/download', function(req, res){
     var currentPath = path.normalize(req.query.path || '/');
     var realPath = config.repository + currentPath;
     res.sendfile(realPath);
+});
+
+/**
+ * Convert srt file to webvtt
+ */
+app.get('/api/v1/subtitle', function(req, res){
+    // TODO : file encoding issue
+    var currentPath = path.normalize(req.query.path || '/');
+    var realPath = config.repository + currentPath;
+    var data = srt.fromSrt(fs.readFileSync(realPath, 'utf-8').toString());
+
+    var output = "WEBVTT\n\n";
+    _.each(data, function(item){
+        output += item.id + "\n";
+        output += item.startTime.toString().replace(',', '.') + " --> " + item.endTime.toString().replace(',', '.') + "\n";
+        output += item.text + "\n\n";
+    });
+
+    res.set('Content-Type', 'text/vtt');
+    res.send(new Buffer(output));
 });
 
 /**
