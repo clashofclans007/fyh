@@ -8,6 +8,7 @@
         "subtitles-parser": "latest",
         "unzip": "0.1.8",
         "node-icu-charset-detector": "latest",
-        "iconv": "2.0.7"
+        "iconv": "2.0.7",
+        "request": "2.33.0"
     }
 }

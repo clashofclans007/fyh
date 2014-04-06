@@ -12,7 +12,9 @@ var express         = require('express');
 var unzip           = require('unzip');
 var exec            = require('child_process').exec;
 var charsetDetector = require('node-icu-charset-detector');
-var Iconv           = require("iconv").Iconv;
+var Iconv           = require('iconv').Iconv;
+var url             = require('url');
+var request         = require('request');
 var config          = require('./config');
 
 /**
@@ -127,7 +129,6 @@ app.get('/api/v1/download', function(req, res){
  * Convert srt file to webvtt
  */
 app.get('/api/v1/subtitle', function(req, res){
-    // TODO : file encoding issue
     var currentPath = path.normalize(req.query.path || '/');
     var realPath = config.repository + currentPath;
     var buffer = fs.readFileSync(realPath);
@@ -141,7 +142,6 @@ app.get('/api/v1/subtitle', function(req, res){
     });
 
     res.set('Content-Type', 'text/vtt; charset=utf-8');
-    //res.set('Content-Disposition', 'attachment; filename=' + path.basename(realPath));
     res.send(new Buffer(output));
 });
 
@@ -226,6 +226,30 @@ app.get('/api/v1/extract', function(req, res){
     } else {
         res.send({});
     }
+});
+
+/**
+ * Upload from url
+ */
+app.get('/api/v1/upload-from-url', function(req, res){
+    // TODO : Dosya adı bulunmayan bağlantılarda sorun çıkabilir.
+    var currentPath = path.normalize(req.query.path || '/');
+    var realPath = config.repository + currentPath;
+
+    var downloadUrl = req.query.url;
+    var parsedUrl = url.parse(downloadUrl);
+    var basename = path.basename(parsedUrl.pathname);
+    var newFilePath = realPath + '/' + basename;
+
+    request(downloadUrl, function(error, response, body){
+        if (error) {
+            res.send({});
+            return;
+        }
+
+        fs.writeFileSync(newFilePath, body);
+        res.send({});
+    });
 });
 
 // Run server

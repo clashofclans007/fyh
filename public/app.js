@@ -74,6 +74,22 @@ $(function(){
         }
     });
 
+    // Upload From Url Controller
+    App.UploadFromUrlController = Ember.ObjectController.extend({
+        url: '',
+        needs: ['path'],
+        actions: {
+            upload: function(){
+                var currentObject = this;
+                var currentPath = this.get('controllers.path').get('currentPath');
+                Ember.$.getJSON('/api/v1/upload-from-url', { url: this.get('url'), path: currentPath }).then(function(){
+                    $('#upload-from-url-modal').modal('hide');
+                    currentObject.get('controllers.path').send('refresh');
+                });
+            }
+        }
+    });
+
     // Video Route
     App.VideoRoute = Ember.Route.extend({
         model: function(params){
