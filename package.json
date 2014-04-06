@@ -6,6 +6,8 @@
         "underscore": "1.6.0",
         "async": "0.2.5",
         "subtitles-parser": "latest",
-        "unzip": "0.1.8"
+        "unzip": "0.1.8",
+        "node-icu-charset-detector": "latest",
+        "iconv": "2.0.7"
     }
 }

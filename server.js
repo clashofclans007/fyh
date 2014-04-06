@@ -2,16 +2,18 @@
  * TODO : Stream close action
  */
 
-var _       = require('underscore');
-var async   = require('async');
-var http    = require('http');
-var path    = require('path');
-var fs      = require('fs');
-var srt     = require('subtitles-parser');
-var express = require('express');
-var unzip   = require('unzip');
-var exec    = require('child_process').exec;
-var config  = require('./config');
+var _               = require('underscore');
+var async           = require('async');
+var http            = require('http');
+var path            = require('path');
+var fs              = require('fs');
+var srt             = require('subtitles-parser');
+var express         = require('express');
+var unzip           = require('unzip');
+var exec            = require('child_process').exec;
+var charsetDetector = require('node-icu-charset-detector');
+var Iconv           = require("iconv").Iconv;
+var config          = require('./config');
 
 /**
  * @see http://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript
@@ -21,6 +23,20 @@ function bytesToSize(bytes) {
     if (bytes == 0) return '0 Bytes';
     var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
     return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+}
+
+/**
+ * @see https://github.com/mooz/node-icu-charset-detector
+ */
+function bufferToString(buffer) {
+    var charset = charsetDetector.detectCharset(buffer).toString();
+
+    try {
+        return buffer.toString(charset);
+    } catch (x) {
+        var charsetConverter = new Iconv(charset, "utf8");
+        return charsetConverter.convert(buffer).toString();
+    }
 }
 
 /**
@@ -114,7 +130,8 @@ app.get('/api/v1/subtitle', function(req, res){
     // TODO : file encoding issue
     var currentPath = path.normalize(req.query.path || '/');
     var realPath = config.repository + currentPath;
-    var data = srt.fromSrt(fs.readFileSync(realPath, 'utf-8').toString());
+    var buffer = fs.readFileSync(realPath);
+    var data = srt.fromSrt(bufferToString(buffer));
 
     var output = "WEBVTT\n\n";
     _.each(data, function(item){
@@ -123,8 +140,8 @@ app.get('/api/v1/subtitle', function(req, res){
         output += item.text + "\n\n";
     });
 
-    res.set('Content-Type', 'text/vtt');
-    res.set('Content-Disposition', 'attachment; filename=' + path.basename(realPath));
+    res.set('Content-Type', 'text/vtt; charset=utf-8');
+    //res.set('Content-Disposition', 'attachment; filename=' + path.basename(realPath));
     res.send(new Buffer(output));
 });
 
