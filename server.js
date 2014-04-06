@@ -98,6 +98,8 @@ app.get('/api/v1/ls', function(req, res){
 app.get('/api/v1/download', function(req, res){
     var currentPath = path.normalize(req.query.path || '/');
     var realPath = config.repository + currentPath;
+
+    res.set('Content-Disposition', 'attachment; filename=' + path.basename(realPath));
     res.sendfile(realPath);
 });
 
@@ -118,6 +120,7 @@ app.get('/api/v1/subtitle', function(req, res){
     });
 
     res.set('Content-Type', 'text/vtt');
+    res.set('Content-Disposition', 'attachment; filename=' + path.basename(realPath));
     res.send(new Buffer(output));
 });
 
