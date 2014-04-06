@@ -215,7 +215,7 @@ app.get('/api/v1/extract', function(req, res){
     var output = path.dirname(realPath) + '/' + basename;
 
     if (extname == '.zip') {
-        fs.createReadStream(realPath).pipe(unzip.Extract({path: output})).on('end', function(){
+        fs.createReadStream(realPath).pipe(unzip.Extract({path: output})).on('close', function(){
             res.send({});
         });
     } else if (extname == '.rar') {
