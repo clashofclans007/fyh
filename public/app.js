@@ -6,6 +6,7 @@ $(function(){
     App.Router.map(function(){
         this.route('path');
         this.route('video', { path: '/video/:path' });
+        this.route('download-manager');
     });
 
     App.IndexRoute = Ember.Route.extend({
@@ -26,7 +27,6 @@ $(function(){
 
     // Path Controller
     App.PathController = Ember.ObjectController.extend({
-        needs: ['video'],
         breadcrumbs: [],
         actions: {
             open: function(path){
@@ -44,9 +44,23 @@ $(function(){
                     console.log(path);
                     currentObject.set('model', path);
                 });
+            }
+        }
+    });
+
+    // Path File Item Controller
+    App.PathFileItemController = Ember.ObjectController.extend({
+        needs: ['video'],
+        isSelectedSubtitle: function(){
+            var selectedSubtitle = this.get('controllers.video.subtitle');
+            return selectedSubtitle != null && selectedSubtitle.name == this.get('name');
+        }.property('controllers.video.subtitle'),
+        actions: {
+            setSubtitle: function(){
+                this.set('controllers.video.subtitle', {name: this.get('name'), path: this.get('path')});
             },
-            setSubtitle: function(name, path){
-                this.set('controllers.video.subtitle', {name: name, path: path});
+            unsetSubtitle: function(){
+                this.set('controllers.video.subtitle', null);
             }
         }
     });

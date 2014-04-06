@@ -10,6 +10,24 @@
 </head>
 <body>
     <script type="text/x-handlebars">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Torrent Manager</a>
+            </div>
+
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li>{{#link-to 'path'}}File Manager{{/link-to}}</li>
+                    <li>{{#link-to 'download-manager'}}Download Manager{{/link-to}}</li>
+                </ul>
+            </div>
+        </nav>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -19,8 +37,39 @@
         </div>
     </script>
 
+    <script type="text/x-handlebars" id="path-file-item">
+        <tr>
+            <td><span class="fa fa-file"></span></td>
+            <td>
+                {{name}}
+                {{#if isVideo}}
+                    <div style="margin-top:10px;">
+                        <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
+                        {{#link-to 'video' path}}<span class="fa fa-video-camera"></span> Watch{{/link-to}}
+                    </div>
+                {{/if}}
+                {{#if isSubtitle}}
+                    <div style="margin-top: 10px;">
+                        <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
+                        {{#if isSelectedSubtitle}}
+                            <a href="javascript:;" class="pull-left" {{action 'unsetSubtitle'}}><span class="fa fa-bars"></span> Unset Subtitle</a>
+                        {{else}}
+                            <a href="javascript:;" class="pull-left" {{action 'setSubtitle'}}><span class="fa fa-bars"></span> Set Subtitle</a>
+                        {{/if}}
+                    </div>
+                {{/if}}
+                {{#if isNormal}}
+                    <div style="margin-top: 10px;">
+                        <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
+                    </div>
+                {{/if}}
+            </td>
+            <td>{{size}}</td>
+        </tr>
+    </script>
+
     <script type="text/x-handlebars" id="path">
-        <h1>Files</h1>
+        <h1>File Manager</h1>
         <div>
             <ol class="breadcrumb">
                 <li><a href="javascript:;" {{action "open" "/"}}>Root</a></li>
@@ -47,30 +96,7 @@
                     </tr>
                 {{/each}}
                 {{#each files}}
-                    <tr>
-                        <td><span class="fa fa-file"></span></td>
-                        <td>
-                            {{name}}
-                            {{#if isVideo}}
-                                <div style="margin-top:10px;">
-                                    <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
-                                    {{#link-to 'video' path}}<span class="fa fa-video-camera"></span> Watch{{/link-to}}
-                                </div>
-                            {{/if}}
-                            {{#if isSubtitle}}
-                                <div style="margin-top: 10px;">
-                                    <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
-                                    <a href="javascript:;" class="pull-left" {{action 'setSubtitle' name path}}><span class="fa fa-bars"></span> Set Subtitle</a>
-                                </div>
-                            {{/if}}
-                            {{#if isNormal}}
-                                <div style="margin-top: 10px;">
-                                    <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
-                                </div>
-                            {{/if}}
-                        </td>
-                        <td>{{size}}</td>
-                    </tr>
+                    {{render "path-file-item" this}}
                 {{/each}}
             </tbody>
         </table>
@@ -88,6 +114,10 @@
                 <source src="{{unbound url}}" type="video/mp4" />
             </video>
         </div>
+    </script>
+
+    <script type="text/x-handlebars" id="download-manager">
+        <h1>Download Manager</h1>
     </script>
 
     <script src="lib/underscore-min.js"></script>
