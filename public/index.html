@@ -23,7 +23,7 @@
 
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li>{{#link-to 'path'}}File Manager{{/link-to}}</li>
+                    <li>{{#link-to 'file-manager' '/'}}File Manager{{/link-to}}</li>
                     <li>{{#link-to 'download-manager'}}Download Manager{{/link-to}}</li>
                 </ul>
             </div>
@@ -45,7 +45,7 @@
                 {{#if isVideo}}
                     <div style="margin-top:10px;">
                         <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
-                        {{#link-to 'video' path}}<span class="fa fa-video-camera"></span> Watch{{/link-to}}
+                        {{#link-to 'video' fileUrl}}<span class="fa fa-video-camera"></span> Watch{{/link-to}}
                     </div>
                 {{/if}}
                 {{#if isSubtitle}}
@@ -66,7 +66,7 @@
                 {{/if}}
                 {{#if isNormal}}
                     <div style="margin-top: 10px;">
-                        <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
+                        <a href="{{unbound fileUrl}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
                     </div>
                 {{/if}}
             </td>
@@ -96,15 +96,15 @@
         </div>
     </script>
 
-    <script type="text/x-handlebars" id="path">
+    <script type="text/x-handlebars" id="file-manager">
         {{render 'upload-from-url'}}
 
         <div style="margin-bottom: 10px;">
             <ol class="breadcrumb">
-                <li><a href="javascript:;" {{action "open" "/"}}>Root</a></li>
+                <li>{{#link-to 'file-manager' '/'}}Root{{/link-to}}</li>
                 {{#each breadcrumbs}}
                     <li></li>
-                    <li><a href="javascript:;" {{action "open" path}}>{{unbound name}}</a></li>
+                    <li>{{#link-to 'file-manager' path}}{{unbound name}}{{/link-to}}</li>
                 {{/each}}
             </ol>
         </div>
@@ -125,7 +125,7 @@
                 {{#each folders}}
                     <tr>
                         <td><span class="fa fa-folder"></span></td>
-                        <td><a href="javascript:;" {{action "open" path}}>{{name}}</a></td>
+                        <td>{{#link-to 'file-manager' path}}{{name}}{{/link-to}}</td>
                         <td>{{totalSize}}</td>
                     </tr>
                 {{/each}}
@@ -138,11 +138,11 @@
 
     <script type="text/x-handlebars" id="video">
         <div style="text-align:center;">
-            <video controls>
+            <video controls width="90%" height="90%">
                 {{#if subtitle}}
-                    <track kind="subtitles" label="{{unbound subtitle.name}}" src="/api/v1/subtitle?path={{unbound subtitle.path}}" default></track>
+                    <track kind="subtitles" label="{{unbound subtitle.name}}" src="/api/v1/subtitle{{unbound subtitle.path}}" default></track>
                 {{/if}}
-                <source src="{{unbound url}}" type="video/mp4" />
+                <source src="{{unbound fileUrl}}" type="video/mp4" />
             </video>
         </div>
     </script>

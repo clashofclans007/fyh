@@ -4,56 +4,29 @@ $(function(){
     });
 
     App.Router.map(function(){
-        this.route('path');
-        this.route('video', { path: '/video/:path' });
+        this.route('file-manager', { path: '/file-manager/:path'});
         this.route('download-manager');
-    });
-
-    App.IndexRoute = Ember.Route.extend({
-        beforeModel: function(){
-            this.transitionTo('path');
-        }
+        this.route('video', { path: '/video/:fileUrl' });
     });
 
     // Path Route
-    App.PathRoute = Ember.Route.extend({
-        model: function(){
-            return Ember.$.getJSON('/api/v1/ls').then(function(path){
-                console.log(path);
-                return path;
-            });
-        }
-    });
-
-    // Path Controller
-    App.PathController = Ember.ObjectController.extend({
-        breadcrumbs: [],
-        actions: {
-            open: function(path){
-                this.get('breadcrumbs').clear();
-                var tempPath = '/';
-                _.each(path.split("/"), function(item){
-                    if (item.length > 0) {
-                        tempPath += item + '/';
-                        this.get('breadcrumbs').pushObject({name: item, path: tempPath});
-                    }
-                }, this);
-
-                var currentObject = this;
-                Ember.$.getJSON('/api/v1/ls', {path: path}).then(function(path){
-                    console.log(path);
-                    currentObject.set('model', path);
-                });
-            },
-            refresh: function(){
-                this.send('open', this.get('currentPath'));
+    App.FileManagerRoute = Ember.Route.extend({
+        model: function(params){
+            var path = '/';
+            if (params.path !== undefined) {
+                path = params.path;
             }
+
+            return Ember.$.getJSON('/api/v1/ls' + path).then(function(data){
+                console.log(data);
+                return data;
+            });
         }
     });
 
     // Path File Item Controller
     App.PathFileItemController = Ember.ObjectController.extend({
-        needs: ['video', 'path'],
+        needs: ['video', 'file-manager'],
         isSelectedSubtitle: function(){
             var selectedSubtitle = this.get('controllers.video.subtitle');
             return selectedSubtitle != null && selectedSubtitle.name == this.get('name');
@@ -77,14 +50,14 @@ $(function(){
     // Upload From Url Controller
     App.UploadFromUrlController = Ember.ObjectController.extend({
         url: '',
-        needs: ['path'],
+        needs: ['file-manager'],
         actions: {
             upload: function(){
                 var currentObject = this;
-                var currentPath = this.get('controllers.path').get('currentPath');
+                var currentPath = this.get('controllers.file-manager').get('currentPath');
                 Ember.$.getJSON('/api/v1/upload-from-url', { url: this.get('url'), path: currentPath }).then(function(){
                     $('#upload-from-url-modal').modal('hide');
-                    currentObject.get('controllers.path').send('refresh');
+                    currentObject.transitionToRoute('file-manager', { path: '/' });
                 });
             }
         }
@@ -93,10 +66,9 @@ $(function(){
     // Video Route
     App.VideoRoute = Ember.Route.extend({
         model: function(params){
-            return Ember.$.getJSON('/api/v1/stream', { path: params.path}).then(function(stream){
-                console.log(stream);
-                return stream;
-            });
+            return {
+                fileUrl: params.fileUrl
+            }
         }
     });
 
