@@ -19,6 +19,7 @@ app.get(/^\/api\/v1\/ls\/?(.*)?$/,require('./app/controllers/ls'));
 app.get(/^\/api\/v1\/subtitle\/?(.*)?$/, require('./app/controllers/subtitle'));
 app.get(/^\/api\/v1\/extract\/?(.*)?$/, require('./app/controllers/extract'));
 app.get('/api/v1/upload-from-url', require('./app/controllers/upload_from_file'));
+app.get('/api/v1/torrent-search', require('./app/controllers/torrent_search'));
 
 // Lets go!
 var server = app.listen(config.appServerPort, function(){

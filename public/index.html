@@ -25,6 +25,7 @@
                 <ul class="nav navbar-nav">
                     <li>{{#link-to 'file-manager' '/'}}File Manager{{/link-to}}</li>
                     <li>{{#link-to 'download-manager'}}Download Manager{{/link-to}}</li>
+                    <li>{{#link-to 'torrent-search'}}Torrent Search{{/link-to}}</li>
                 </ul>
             </div>
         </nav>
@@ -149,6 +150,49 @@
 
     <script type="text/x-handlebars" id="download-manager">
         <h1>Download Manager</h1>
+    </script>
+
+    <script type="text/x-handlebars" id="torrent-search">
+        <div style="margin-bottom: 20px;">
+            <form class="form-inline">
+                {{input type="text" value=search class="form-control"}}
+                <button type="button" class="btn btn-default" {{action 'search'}}><span class="fa fa-search"></span> Ara</button>
+            </form>
+        </div>
+
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th style="width: 50px;">SE</th>
+                <th style="width: 50px;">LE</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each torrents}}
+                {{render "torrent-search-item" this}}
+            {{/each}}
+            </tbody>
+        </table>
+
+        <div style="margin: 10px 0;">
+            Page : {{page}}
+            <ul class="pager">
+                <li><a href="javascript:;" {{action 'prevPage'}}>Previous</a></li>
+                <li><a href="javascript:;" {{action 'nextPage'}}>Next</a></li>
+            </ul>
+        </div>
+    </script>
+
+    <script type="text/x-handlebars" id="torrent-search-item">
+        <tr>
+            <td>
+                <strong>{{name}}</strong>
+                <div style="margin-top:10px;">{{desc}}</div>
+            </td>
+            <td>{{seeders}}</td>
+            <td>{{leechers}}</td>
+        </tr>
     </script>
 
     <script src="lib/underscore-min.js"></script>

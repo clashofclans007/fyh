@@ -5,8 +5,9 @@ $(function(){
 
     App.Router.map(function(){
         this.route('file-manager', { path: '/file-manager/:path'});
-        this.route('download-manager');
         this.route('video', { path: '/video/:fileUrl' });
+        this.route('download-manager');
+        this.route('torrent-search');
     });
 
     // Path Route
@@ -75,5 +76,30 @@ $(function(){
     // Video Controller
     App.VideoController = Ember.ObjectController.extend({
         subtitle: null
+    });
+
+    // Torrent Search Controller
+    App.TorrentSearchController = Ember.ObjectController.extend({
+        search: '',
+        page: 0,
+        torrents: [],
+        actions: {
+            search: function(){
+                var currentObject = this;
+                Ember.$.getJSON('/api/v1/torrent-search', { search: this.get('search'), page: this.get('page') }).then(function(torrents){
+                    currentObject.set('torrents', torrents);
+                });
+            },
+            nextPage: function(){
+                this.set('page', this.get('page') + 1);
+                this.send('search');
+            },
+            prevPage: function(){
+                if (this.get('page') > 0) {
+                    this.set('page', this.get('page') - 1);
+                    this.send('search');
+                }
+            }
+        }
     });
 }());

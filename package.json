@@ -9,6 +9,7 @@
         "unzip": "0.1.8",
         "node-icu-charset-detector": "latest",
         "iconv": "2.0.7",
-        "request": "2.33.0"
+        "request": "2.33.0",
+        "jsdom": "0.10.5"
     }
 }
