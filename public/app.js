@@ -27,6 +27,19 @@ $(function(){
                 Ember.$.getJSON('/api/v1/ls' + path).then(function(data){
                     currentObject.set('content', data);
                 });
+            },
+            unlink: function(path){
+                if (!confirm('Are you sure?')) {
+                    return;
+                }
+
+                var currentObject = this;
+                Ember.$.getJSON('/api/v1/unlink' + path).then(function(){
+                    currentObject.send('refresh');
+                });
+            },
+            refresh: function(){
+                this.send('cd', this.get('currentPath'));
             }
         }
     });
@@ -48,8 +61,11 @@ $(function(){
             extract: function(){
                 var currentObject = this;
                 return Ember.$.getJSON('/api/v1/extract', { path: this.get('path')}).then(function(){
-                    currentObject.get('controllers.path').send('refresh');
+                    currentObject.get('controllers.file-manager').send('refresh');
                 });
+            },
+            unlink: function(){
+                this.get('controllers.file-manager').send('unlink', this.get('path'));
             }
         }
     });
@@ -64,7 +80,7 @@ $(function(){
                 var currentPath = this.get('controllers.file-manager').get('currentPath');
                 Ember.$.getJSON('/api/v1/upload-from-url', { url: this.get('url'), path: currentPath }).then(function(){
                     $('#upload-from-url-modal').modal('hide');
-                    currentObject.transitionToRoute('file-manager', { path: '/' });
+                    currentObject.get('controllers.file-manager').send('refresh');
                 });
             }
         }

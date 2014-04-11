@@ -90,7 +90,14 @@
                 {{#each folders}}
                     <tr>
                         <td><span class="fa fa-folder"></span></td>
-                        <td><a href="javascript:;" {{action 'cd' path}}>{{name}}</a></td>
+                        <td>
+                            {{name}}
+                            <div style="margin-top: 10px;">
+                                <a href="javascript:;" {{action 'cd' path}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-folder-open-o"></span> Open</a>
+                                <a href="javascript:;" {{action 'unlink' path}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-trash-o"></span> Remove</a>
+                                <div class="clearfix"></div>
+                            </div>
+                        </td>
                         <td>{{totalSize}}</td>
                     </tr>
                 {{/each}}
@@ -106,33 +113,29 @@
             <td><span class="fa fa-file"></span></td>
             <td>
                 {{name}}
-                {{#if isVideo}}
-                <div style="margin-top:10px;">
-                    <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
-                    {{#link-to 'video' fileUrl}}<span class="fa fa-video-camera"></span> Watch{{/link-to}}
-                </div>
-                {{/if}}
-                {{#if isSubtitle}}
                 <div style="margin-top: 10px;">
                     <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
-                    {{#if isSelectedSubtitle}}
-                    <a href="javascript:;" class="pull-left" {{action 'unsetSubtitle'}}><span class="fa fa-bars"></span> Unset Subtitle</a>
-                    {{else}}
-                    <a href="javascript:;" class="pull-left" {{action 'setSubtitle'}}><span class="fa fa-bars"></span> Set Subtitle</a>
+                    <a href="javascript:;" {{action 'unlink'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-trash-o"></span> Remove</a>
+
+                    {{#if isVideo}}
+                        {{#link-to 'video' fileUrl}}<span class="fa fa-video-camera"></span> Watch{{/link-to}}
                     {{/if}}
+
+                    {{#if isSubtitle}}
+                        {{#if isSelectedSubtitle}}
+                            <a href="javascript:;" class="pull-left" {{action 'unsetSubtitle'}}><span class="fa fa-bars"></span> Unset Subtitle</a>
+                        {{else}}
+                            <a href="javascript:;" class="pull-left" {{action 'setSubtitle'}}><span class="fa fa-bars"></span> Set Subtitle</a>
+                        {{/if}}
+                        <div class="clearfix"></div>
+                    {{/if}}
+
+                    {{#if isArchive}}
+                        <a href="javascript:;" class="pull-left" {{action 'extract'}}><span class="fa fa-archive"></span> Extract</a>
+                    {{/if}}
+
+                    <div class="clearfix"></div>
                 </div>
-                {{/if}}
-                {{#if isArchive}}
-                <div style="margin-top: 10px;">
-                    <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
-                    <a href="javascript:;" class="pull-left" {{action 'extract'}}><span class="fa fa-archive"></span> Extract</a>
-                </div>
-                {{/if}}
-                {{#if isNormal}}
-                <div style="margin-top: 10px;">
-                    <a href="{{unbound fileUrl}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
-                </div>
-                {{/if}}
             </td>
             <td>{{size}}</td>
         </tr>
