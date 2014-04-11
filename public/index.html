@@ -23,9 +23,10 @@
 
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li>{{#link-to 'file-manager' '/'}}File Manager{{/link-to}}</li>
+                    <li>{{#link-to 'file-manager'}}File Manager{{/link-to}}</li>
                     <li>{{#link-to 'download-manager'}}Download Manager{{/link-to}}</li>
                     <li>{{#link-to 'torrent-search'}}Torrent Search{{/link-to}}</li>
+                    <li>{{#link-to 'subtitle-search'}}Subtitle Search{{/link-to}}</li>
                 </ul>
             </div>
         </nav>
@@ -36,43 +37,6 @@
                 </div>
             </div>
         </div>
-    </script>
-
-    <script type="text/x-handlebars" id="path-file-item">
-        <tr>
-            <td><span class="fa fa-file"></span></td>
-            <td>
-                {{name}}
-                {{#if isVideo}}
-                    <div style="margin-top:10px;">
-                        <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
-                        {{#link-to 'video' fileUrl}}<span class="fa fa-video-camera"></span> Watch{{/link-to}}
-                    </div>
-                {{/if}}
-                {{#if isSubtitle}}
-                    <div style="margin-top: 10px;">
-                        <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
-                        {{#if isSelectedSubtitle}}
-                            <a href="javascript:;" class="pull-left" {{action 'unsetSubtitle'}}><span class="fa fa-bars"></span> Unset Subtitle</a>
-                        {{else}}
-                            <a href="javascript:;" class="pull-left" {{action 'setSubtitle'}}><span class="fa fa-bars"></span> Set Subtitle</a>
-                        {{/if}}
-                    </div>
-                {{/if}}
-                {{#if isArchive}}
-                    <div style="margin-top: 10px;">
-                        <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
-                        <a href="javascript:;" class="pull-left" {{action 'extract'}}><span class="fa fa-archive"></span> Extract</a>
-                    </div>
-                {{/if}}
-                {{#if isNormal}}
-                    <div style="margin-top: 10px;">
-                        <a href="{{unbound fileUrl}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
-                    </div>
-                {{/if}}
-            </td>
-            <td>{{size}}</td>
-        </tr>
     </script>
 
     <script type="text/x-handlebars" id="upload-from-url">
@@ -102,10 +66,10 @@
 
         <div style="margin-bottom: 10px;">
             <ol class="breadcrumb">
-                <li>{{#link-to 'file-manager' '/'}}Root{{/link-to}}</li>
+                <li><a href="javascript:;" {{action 'cd' '/'}}>Root</a></li>
                 {{#each breadcrumbs}}
                     <li></li>
-                    <li>{{#link-to 'file-manager' path}}{{unbound name}}{{/link-to}}</li>
+                    <li><a href="javascript:;" {{action 'cd' path}}>{{unbound name}}</a></li>
                 {{/each}}
             </ol>
         </div>
@@ -126,19 +90,56 @@
                 {{#each folders}}
                     <tr>
                         <td><span class="fa fa-folder"></span></td>
-                        <td>{{#link-to 'file-manager' path}}{{name}}{{/link-to}}</td>
+                        <td><a href="javascript:;" {{action 'cd' path}}>{{name}}</a></td>
                         <td>{{totalSize}}</td>
                     </tr>
                 {{/each}}
                 {{#each files}}
-                    {{render "path-file-item" this}}
+                    {{render "path-item" this}}
                 {{/each}}
             </tbody>
         </table>
     </script>
 
+    <script type="text/x-handlebars" id="path-item">
+        <tr>
+            <td><span class="fa fa-file"></span></td>
+            <td>
+                {{name}}
+                {{#if isVideo}}
+                <div style="margin-top:10px;">
+                    <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
+                    {{#link-to 'video' fileUrl}}<span class="fa fa-video-camera"></span> Watch{{/link-to}}
+                </div>
+                {{/if}}
+                {{#if isSubtitle}}
+                <div style="margin-top: 10px;">
+                    <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
+                    {{#if isSelectedSubtitle}}
+                    <a href="javascript:;" class="pull-left" {{action 'unsetSubtitle'}}><span class="fa fa-bars"></span> Unset Subtitle</a>
+                    {{else}}
+                    <a href="javascript:;" class="pull-left" {{action 'setSubtitle'}}><span class="fa fa-bars"></span> Set Subtitle</a>
+                    {{/if}}
+                </div>
+                {{/if}}
+                {{#if isArchive}}
+                <div style="margin-top: 10px;">
+                    <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
+                    <a href="javascript:;" class="pull-left" {{action 'extract'}}><span class="fa fa-archive"></span> Extract</a>
+                </div>
+                {{/if}}
+                {{#if isNormal}}
+                <div style="margin-top: 10px;">
+                    <a href="{{unbound fileUrl}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
+                </div>
+                {{/if}}
+            </td>
+            <td>{{size}}</td>
+        </tr>
+    </script>
+
     <script type="text/x-handlebars" id="video">
-        <div style="text-align:center;">
+        <div style="text-align:center; width: 100%; height:100%;">
             <video controls width="90%" height="90%">
                 {{#if subtitle}}
                     <track kind="subtitles" label="{{unbound subtitle.name}}" src="/api/v1/subtitle{{unbound subtitle.path}}" default></track>
@@ -192,6 +193,39 @@
             </td>
             <td>{{seeders}}</td>
             <td>{{leechers}}</td>
+        </tr>
+    </script>
+
+    <script type="text/x-handlebars" id="subtitle-search">
+        <div style="margin-bottom: 20px;">
+            <form class="form-inline">
+                {{input type="text" value=search class="form-control"}}
+                <button type="button" class="btn btn-default" {{action 'search'}}><span class="fa fa-search"></span> Ara</button>
+            </form>
+        </div>
+
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each subtitles}}
+                {{render "subtitle-search-item" this}}
+            {{/each}}
+            </tbody>
+        </table>
+    </script>
+
+    <script type="text/x-handlebars" id="subtitle-search-item">
+        <tr>
+            <td>
+                <strong>{{name}}</strong>
+                <div style="margin-top: 10px;">
+                    <a href="javascript:;">Show Files</a>
+                </div>
+            </td>
         </tr>
     </script>
 

@@ -4,29 +4,35 @@ $(function(){
     });
 
     App.Router.map(function(){
-        this.route('file-manager', { path: '/file-manager/:path'});
+        this.route('file-manager');
         this.route('video', { path: '/video/:fileUrl' });
         this.route('download-manager');
         this.route('torrent-search');
+        this.route('subtitle-search');
     });
 
-    // Path Route
+    // FileManager Route
     App.FileManagerRoute = Ember.Route.extend({
-        model: function(params){
-            var path = '/';
-            if (params.path !== undefined) {
-                path = params.path;
-            }
-
-            return Ember.$.getJSON('/api/v1/ls' + path).then(function(data){
-                console.log(data);
-                return data;
-            });
+        setupController: function(controller, model){
+            this._super(controller, model);
+            controller.send('cd', '/');
         }
     });
 
-    // Path File Item Controller
-    App.PathFileItemController = Ember.ObjectController.extend({
+    // FileManager Controller
+    App.FileManagerController = Ember.ObjectController.extend({
+        actions: {
+            cd: function(path){
+                var currentObject = this;
+                Ember.$.getJSON('/api/v1/ls' + path).then(function(data){
+                    currentObject.set('content', data);
+                });
+            }
+        }
+    });
+
+    // Path Item Controller
+    App.PathItemController = Ember.ObjectController.extend({
         needs: ['video', 'file-manager'],
         isSelectedSubtitle: function(){
             var selectedSubtitle = this.get('controllers.video.subtitle');
@@ -99,6 +105,20 @@ $(function(){
                     this.set('page', this.get('page') - 1);
                     this.send('search');
                 }
+            }
+        }
+    });
+
+    // Subtitle Search Controller
+    App.SubtitleSearchController = Ember.ObjectController.extend({
+        search: '',
+        subtitles: [],
+        actions: {
+            search: function(){
+                var currentObject = this;
+                Ember.$.getJSON('/api/v1/subtitle-search', { search: this.get('search') }).then(function(subtitles){
+                    currentObject.set('subtitles', subtitles);
+                });
             }
         }
     });
