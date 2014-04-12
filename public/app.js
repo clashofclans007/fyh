@@ -185,6 +185,17 @@ $(function(){
         }
     });
 
+    // Torrent Search Item
+    App.TorrentSearchItemController = Ember.ObjectController.extend({
+        actions: {
+            start: function(){
+                Ember.$.getJSON('/api/v1/torrent-start', { name: this.get('name'), magnet: this.get('magnet') }).then(function(id){
+                    console.log(id);
+                });
+            }
+        }
+    });
+
     // Subtitle Search Controller
     App.SubtitleSearchController = Ember.ObjectController.extend({
         search: '',

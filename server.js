@@ -15,6 +15,7 @@ app.use(function(req, res, next){
 });
 
 // Routes
+app.get('/api/v1/torrent-start', require('./app/controllers/torrent_start'));
 app.get('/api/v1/upload-from-url', require('./app/controllers/upload_from_file'));
 app.get('/api/v1/torrent-search', require('./app/controllers/torrent_search'));
 app.get('/api/v1/subtitle-search', require('./app/controllers/subtitle_search'));
