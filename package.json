@@ -10,6 +10,7 @@
         "node-icu-charset-detector": "latest",
         "iconv": "2.0.7",
         "request": "2.33.0",
-        "jsdom": "0.10.5"
+        "jsdom": "0.10.5",
+        "rimraf": "2.2.6"
     }
 }

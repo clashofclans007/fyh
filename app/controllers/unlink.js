@@ -1,9 +1,10 @@
 /**
- * Arşiv dosyalarını, bulunduğu dizine arşiv dosyası ile aynı isimli bir klasör oluşturarak açar.
+ * Dosya ya da dizini siler.
  */
 
 var path    = require('path');
 var fs      = require('fs');
+var rimraf  = require('rimraf');
 var config  = require('../../config');
 
 module.exports = function(req, res){
@@ -15,14 +16,7 @@ module.exports = function(req, res){
     var currentPath = '/' + path.normalize(req.params[0]);
     var realPath    = config.repository + currentPath;
 
-    var stat = fs.statSync(realPath);
-    if (stat.isFile()) {
-        fs.unlink(realPath, function(error){
-            res.send({});
-        });
-    } else {
-        fs.rmdir(realPath, function(error){
-            res.send({});
-        });
-    }
+    rimraf(realPath, function(){
+        res.send({});
+    });
 };
