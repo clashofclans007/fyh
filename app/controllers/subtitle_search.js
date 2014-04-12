@@ -29,6 +29,9 @@ module.exports = function(req, res){
 
                 var id = $(item).attr('id');
                 var name = $('td a', item).eq(0).text();
+                if (name.length == 0) {
+                    return;
+                }
 
                 subtitles.push({
                     id: id,
