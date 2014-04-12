@@ -101,7 +101,8 @@ $(function(){
             },
             extract: function(){
                 var currentObject = this;
-                return Ember.$.getJSON('/api/v1/extract', { path: this.get('path')}).then(function(){
+                return Ember.$.getJSON('/api/v1/extract', { path: this.get('path')}).then(function(response){
+                    console.log(response);
                     currentObject.get('controllers.file-manager').send('refresh');
                 });
             }
@@ -193,6 +194,23 @@ $(function(){
                 var currentObject = this;
                 Ember.$.getJSON('/api/v1/subtitle-search', { search: this.get('search') }).then(function(subtitles){
                     currentObject.set('subtitles', subtitles);
+                });
+            }
+        }
+    });
+
+    // Subtitle Search Item Controller
+    App.SubtitleSearchItemController = Ember.ObjectController.extend({
+        actions: {
+            showFiles: function(){
+                var currentObject = this;
+                Ember.$.getJSON('/api/v1/subtitle-files', { id: this.get('id') }).then(function(files){
+                    currentObject.set('files', files);
+                });
+            },
+            uploadFile: function(fileId){
+                Ember.$.getJSON('/api/v1/upload-subtitle', { id: fileId }).then(function(){
+                    alert('Uploaded');
                 });
             }
         }

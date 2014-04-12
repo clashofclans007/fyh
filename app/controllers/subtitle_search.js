@@ -7,7 +7,7 @@ var jsdom = require('jsdom');
 
 module.exports = function(req, res){
     var searchParam = req.query.search;
-    var searchUrl = 'http://www.opensubtitles.org/en/search2/sublanguageid-tur/moviename-' + searchParam + '/sort-2/asc-0';
+    var searchUrl = 'http://www.opensubtitles.org/en/search2/sublanguageid-all/moviename-' + searchParam + '/sort-2/asc-0';
 
     request(searchUrl, function(error, response, body){
         if (error || response.statusCode != 200) {
@@ -27,15 +27,19 @@ module.exports = function(req, res){
                     return;
                 }
 
-                var id = $(item).attr('id');
+                var id = $(item).attr('id').replace('name', '');
                 var name = $('td a', item).eq(0).text();
                 if (name.length == 0) {
                     return;
                 }
+                var fileCount = $('td', item).eq(3).text();
+                var latestUpdate = $('td', item).eq(4).text();
 
                 subtitles.push({
                     id: id,
-                    name: name
+                    name: name,
+                    fileCount: fileCount,
+                    latestUpdate: latestUpdate
                 });
             });
 

@@ -270,7 +270,18 @@
             <td>
                 <strong>{{name}}</strong>
                 <div style="margin-top: 10px;">
-                    <a href="javascript:;">Show Files</a>
+                    <span class="pull-left" style="margin-right:10px;"><span class="label label-info">Latest Update</span> {{latestUpdate}}</span>
+                    <a href="javascript:;" class="pull-left" {{action 'showFiles'}}>Show Files ({{fileCount}})</a>
+                    <div class="clearfix"></div>
+                </div>
+                <div style="margin-top: 10px">
+                    <ul>
+                        {{#each files}}
+                            <li>
+                                <a href="javascript:;" {{action 'uploadFile' id}}><span class="fa fa-cloud-upload"></span> Upload</a> - {{cdCount}} - {{uploadDate}} - {{language}}
+                            </li>
+                        {{/each}}
+                    </ul>
                 </div>
             </td>
         </tr>
