@@ -20,6 +20,7 @@ app.get('/api/v1/torrent-search', require('./app/controllers/torrent_search'));
 app.get('/api/v1/subtitle-search', require('./app/controllers/subtitle_search'));
 app.get(/^\/api\/v1\/ls\/?(.*)?$/,require('./app/controllers/ls'));
 app.get(/^\/api\/v1\/unlink\/?(.*)?$/,require('./app/controllers/unlink'));
+app.get(/^\/api\/v1\/mkdir\/?(.*)?$/,require('./app/controllers/mkdir'));
 app.get(/^\/api\/v1\/subtitle\/?(.*)?$/, require('./app/controllers/subtitle'));
 app.get(/^\/api\/v1\/extract\/?(.*)?$/, require('./app/controllers/extract'));
 

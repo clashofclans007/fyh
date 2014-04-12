@@ -86,6 +86,27 @@ $(function(){
         }
     });
 
+    // Create Folder Controller
+    App.CreateFolderController = Ember.ObjectController.extend({
+        folder: '',
+        needs: ['file-manager'],
+        actions: {
+            create: function(){
+                if (this.get('folder').length == 0) {
+                    return;
+                }
+
+                var currentObject = this;
+                var currentPath = this.get('controllers.file-manager').get('currentPath');
+                Ember.$.getJSON('/api/v1/mkdir', { folder: this.get('folder'), path: currentPath }).then(function(){
+                    $('#create-folder-modal').modal('hide');
+                    currentObject.set('folder', '');
+                    currentObject.get('controllers.file-manager').send('refresh');
+                });
+            }
+        }
+    });
+
     // Video Route
     App.VideoRoute = Ember.Route.extend({
         model: function(params){

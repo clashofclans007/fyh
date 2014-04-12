@@ -61,8 +61,31 @@
         </div>
     </script>
 
+    <script type="text/x-handlebars" id="create-folder">
+        <div class="modal fade" id="create-folder-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Create Folder</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            {{input type="text" value=folder class="form-control" placeholder="Folder"}}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" {{action "create"}}>Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
     <script type="text/x-handlebars" id="file-manager">
         {{render 'upload-from-url'}}
+        {{render 'create-folder'}}
 
         <div style="margin-bottom: 10px;">
             <ol class="breadcrumb">
@@ -75,6 +98,7 @@
         </div>
         <div style="margin-bottom: 10px;">
             <div class="btn-group">
+                <button type="button" data-toggle="modal" data-target="#create-folder-modal" class="btn btn-default btn-sm"><span class="fa fa-folder"></span> Create Folder</button>
                 <button type="button" data-toggle="modal" data-target="#upload-from-url-modal" class="btn btn-default btn-sm"><span class="fa fa-upload"></span> Upload From Url</button>
             </div>
         </div>
@@ -95,6 +119,7 @@
                             <div style="margin-top: 10px;">
                                 <a href="javascript:;" {{action 'cd' path}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-folder-open-o"></span> Open</a>
                                 <a href="javascript:;" {{action 'unlink' path}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-trash-o"></span> Remove</a>
+                                <a href="javascript:;" {{action 'move' path}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-briefcase"></span> Move</a>
                                 <div class="clearfix"></div>
                             </div>
                         </td>
@@ -116,6 +141,7 @@
                 <div style="margin-top: 10px;">
                     <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
                     <a href="javascript:;" {{action 'unlink'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-trash-o"></span> Remove</a>
+                    <a href="javascript:;" {{action 'move'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-briefcase"></span> Move</a>
 
                     {{#if isVideo}}
                         {{#link-to 'video' fileUrl}}<span class="fa fa-video-camera"></span> Watch{{/link-to}}
