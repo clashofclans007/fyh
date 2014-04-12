@@ -21,6 +21,7 @@ $(function(){
 
     // FileManager Controller
     App.FileManagerController = Ember.ObjectController.extend({
+        moveFile: null,
         actions: {
             cd: function(path){
                 var currentObject = this;
@@ -40,12 +41,52 @@ $(function(){
             },
             refresh: function(){
                 this.send('cd', this.get('currentPath'));
+            },
+            setMoveFile: function(path){
+                this.set('moveFile', path);
+            },
+            unsetMoveFile: function(){
+                this.set('moveFile', null);
+            },
+            move: function(){
+                if (!confirm('Are you sure?')) {
+                    return;
+                }
+
+                var currentObject = this;
+                Ember.$.getJSON('/api/v1/move', { newPath: this.get('currentPath'), 'path': this.get('moveFile').path}).then(function(){
+                    currentObject.send('unsetMoveFile');
+                    currentObject.send('refresh');
+                });
+            }
+        }
+    });
+
+    // Path Folder Controller
+    App.PathFolderItemController = Ember.ObjectController.extend({
+        needs: ['file-manager'],
+        isMoveFile: function(){
+            var moveFile = this.get('controllers.file-manager.moveFile');
+            return moveFile != null && moveFile.name == this.get('name');
+        }.property('controllers.file-manager.moveFile'),
+        actions: {
+            cd: function(){
+                this.get('controllers.file-manager').send('cd', this.get('path'));
+            },
+            unlink: function(){
+                this.get('controllers.file-manager').send('unlink', this.get('path'));
+            },
+            setMoveFile: function(){
+                this.get('controllers.file-manager').send('setMoveFile', {name: this.get('name'), path: this.get('path')});
+            },
+            unsetMoveFile: function(){
+                this.get('controllers.file-manager').send('unsetMoveFile');
             }
         }
     });
 
     // Path Item Controller
-    App.PathItemController = Ember.ObjectController.extend({
+    App.PathItemController = App.PathFolderItemController.extend({
         needs: ['video', 'file-manager'],
         isSelectedSubtitle: function(){
             var selectedSubtitle = this.get('controllers.video.subtitle');
@@ -63,9 +104,6 @@ $(function(){
                 return Ember.$.getJSON('/api/v1/extract', { path: this.get('path')}).then(function(){
                     currentObject.get('controllers.file-manager').send('refresh');
                 });
-            },
-            unlink: function(){
-                this.get('controllers.file-manager').send('unlink', this.get('path'));
             }
         }
     });

@@ -99,6 +99,10 @@
         <div style="margin-bottom: 10px;">
             <div class="btn-group">
                 <button type="button" data-toggle="modal" data-target="#create-folder-modal" class="btn btn-default btn-sm"><span class="fa fa-folder"></span> Create Folder</button>
+                {{#if moveFile}}
+                    <button type="button" {{action 'move'}} class="btn btn-success btn-sm"><span class="fa fa-briefcase"></span> Move Here</button>
+                    <button type="button" {{action 'unsetMoveFile'}} class="btn btn-danger btn-sm"><span class="fa fa-briefcase"></span> Cancel Move</button>
+                {{/if}}
                 <button type="button" data-toggle="modal" data-target="#upload-from-url-modal" class="btn btn-default btn-sm"><span class="fa fa-upload"></span> Upload From Url</button>
             </div>
         </div>
@@ -112,25 +116,35 @@
             </thead>
             <tbody>
                 {{#each folders}}
-                    <tr>
-                        <td><span class="fa fa-folder"></span></td>
-                        <td>
-                            {{name}}
-                            <div style="margin-top: 10px;">
-                                <a href="javascript:;" {{action 'cd' path}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-folder-open-o"></span> Open</a>
-                                <a href="javascript:;" {{action 'unlink' path}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-trash-o"></span> Remove</a>
-                                <a href="javascript:;" {{action 'move' path}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-briefcase"></span> Move</a>
-                                <div class="clearfix"></div>
-                            </div>
-                        </td>
-                        <td>{{totalSize}}</td>
-                    </tr>
+                    {{render "path-folder-item" this}}
                 {{/each}}
                 {{#each files}}
                     {{render "path-item" this}}
                 {{/each}}
             </tbody>
         </table>
+    </script>
+
+    <script type="text/x-handlebars" id="path-folder-item">
+        <tr>
+            <td><span class="fa fa-folder"></span></td>
+            <td>
+                {{name}}
+                <div style="margin-top: 10px;">
+                    {{#unless isMoveFile}}
+                        <a href="javascript:;" {{action 'cd'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-folder-open-o"></span> Open</a>
+                    {{/unless}}
+                    <a href="javascript:;" {{action 'unlink'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-trash-o"></span> Remove</a>
+                    {{#if isMoveFile}}
+                        <a href="javascript:;" {{action 'unsetMoveFile'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-briefcase"></span> Cancel Move</a>
+                    {{else}}
+                        <a href="javascript:;" {{action 'setMoveFile'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-briefcase"></span> Move</a>
+                    {{/if}}
+                    <div class="clearfix"></div>
+                </div>
+            </td>
+            <td>{{totalSize}}</td>
+        </tr>
     </script>
 
     <script type="text/x-handlebars" id="path-item">
@@ -141,7 +155,11 @@
                 <div style="margin-top: 10px;">
                     <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
                     <a href="javascript:;" {{action 'unlink'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-trash-o"></span> Remove</a>
-                    <a href="javascript:;" {{action 'move'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-briefcase"></span> Move</a>
+                    {{#if isMoveFile}}
+                        <a href="javascript:;" {{action 'unsetMoveFile'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-briefcase"></span> Cancel Move</a>
+                    {{else}}
+                        <a href="javascript:;" {{action 'setMoveFile'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-briefcase"></span> Move</a>
+                    {{/if}}
 
                     {{#if isVideo}}
                         {{#link-to 'video' fileUrl}}<span class="fa fa-video-camera"></span> Watch{{/link-to}}
