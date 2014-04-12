@@ -8,15 +8,22 @@ module.exports = function(req, res){
     var downloadUrl = 'http://www.opensubtitles.org/en/subtitleserve/sub/' + req.query.id;
     var realPath = config.repository;
 
-    request(downloadUrl, function(error, response, body){
+    request.head(downloadUrl, function(error, response){
         if (error) {
             res.send({});
             return;
         }
 
-        var filename = response.headers['content-disposition'].match(/filename=\"(.*)\"/)[1];
-        var newFilePath = realPath + '/' + filename;
-        fs.writeFileSync(newFilePath, body);
-        res.send({});
+        if (response.statusCode == 200) {
+            var filename = response.headers['content-disposition'].match(/filename=\"(.*)\"/)[1];
+            var newFilePath = realPath + '/' + filename;
+            request(downloadUrl).pipe(fs.createWriteStream(newFilePath)).on('close', function(){
+                res.send({});
+            }).on('error', function(){
+                res.send({});
+            });
+        } else {
+            res.send({});
+        }
     });
 };

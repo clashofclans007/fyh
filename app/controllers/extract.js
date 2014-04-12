@@ -18,6 +18,8 @@ module.exports = function(req, res){
     if (extname == '.zip') {
         fs.createReadStream(realPath).pipe(unzip.Extract({ path: output })).on('close', function(){
             res.send({});
+        }).on('error', function(){
+            res.send({});
         });
     } else if (extname == '.rar') {
         exec("unrar x '" + realPath + "' '" + output + "/'", function(error, stdout, stderr){
