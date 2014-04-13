@@ -1,4 +1,4 @@
-var torrentManager  = require('../../torrent_manager');
+var torrentManager  = require('../../torrent_manager/torrent_manager');
 var config          = require('../../config');
 
 module.exports = function(req, res){
