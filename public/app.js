@@ -236,12 +236,12 @@ $(function(){
     });
 
     // Download Manager Controller
-    App.DownloadManagerController = Ember.Controller.extend({
+    App.DownloadManagerController = Ember.ObjectController.extend({
+        torrents: [],
         actions: {
             refresh: function(){
                 var currentObject = this;
                 Ember.$.getJSON('/api/v1/torrent-list').then(function(torrents){
-                    console.log(torrents);
                     currentObject.set('torrents', torrents);
                 });
             }
@@ -249,12 +249,16 @@ $(function(){
     });
 
     // Download Manager Item Controller
-    App.DownloadManagerItemController = Ember.Controller.extend({
+    App.DownloadManagerItemController = Ember.ObjectController.extend({
         needs: ['download-manager'],
         actions: {
             remove: function(){
+                if (!confirm('Are you sure?')) {
+                    return;
+                }
+
                 var currentObject = this;
-                Ember.$.getJSON('/api/v1/torrent-remove', {key: this.get('key')}).then(function(){
+                Ember.$.getJSON('/api/v1/torrent-remove', {key: this.get('key')}).then(function(response){
                     currentObject.send('refresh');
                 });
             }

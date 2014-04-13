@@ -6,7 +6,7 @@ var path            = require('path');
 var mkdirp          = require('mkdirp');
 var config          = require('./config');
 var sqlite3         = require('sqlite3').verbose();
-var db              = new sqlite3.Database('../app.db');
+var db              = new sqlite3.Database('app/app.db');
 var engines         = {};
 
 // Utility Section
@@ -77,13 +77,19 @@ var TorrentEngineManager = {
      * @param callback Geriye herhangi bir bilgi döndürmez.
      */
     remove: function(key, callback) {
+        var currentObject = this;
+
         if (this.engines[key] !== undefined) {
             this.engines[key].destroy(); // İstemciyi durdur, bağlantıları kapat.
             // Tüm cache dsyalarını sil.
             this.engines[key].remove(function(){
+                delete currentObject.engines[key];
                 console.log(__filename, 'The cache files have been removed for torrent: ' + key);
                 callback();
             });
+        } else {
+            // Herhangi bir istemci yoksa devam et.
+            callback();
         }
     }
 };
@@ -176,7 +182,7 @@ var TorrentDbManager = {
      * @param callback Başarılı silme işlemi için true, başarısız bir işlem için false değerini döner.
      */
     remove: function(key, callback) {
-        db.run('DELETE FROM torrent WHERE key = $key', function(err){
+        db.run('DELETE FROM torrent WHERE key = $key', {$key: key}, function(err){
             if (err) {
                 console.log(__filename, err);
                 callback(false);
