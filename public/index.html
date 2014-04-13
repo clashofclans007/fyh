@@ -261,6 +261,14 @@
             {{/each}}
             </tbody>
         </table>
+
+        <div style="margin: 10px 0;">
+            Page : {{page}}
+            <ul class="pager">
+                <li><a href="javascript:;" {{action 'prevPage'}}>Previous</a></li>
+                <li><a href="javascript:;" {{action 'nextPage'}}>Next</a></li>
+            </ul>
+        </div>
     </script>
 
     <script type="text/x-handlebars" id="subtitle-search-item">

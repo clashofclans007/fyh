@@ -11,7 +11,9 @@ module.exports = function(req, res){
     res.header("Expires", 0);
 
     var searchParam = req.query.search;
-    var searchUrl = 'http://www.opensubtitles.org/en/search2/sublanguageid-all/moviename-' + searchParam + '/sort-2/asc-0';
+    var page = req.query.page;
+    var offset = 40 * page;
+    var searchUrl = 'http://www.opensubtitles.org/en/search2/sublanguageid-all/moviename-' + searchParam + '/sort-2/asc-0/offset-' + offset;
 
     request(searchUrl, function(error, response, body){
         if (error || response.statusCode != 200) {
