@@ -2,11 +2,11 @@ torrent-manager
 ===============
 
 Gereksinimler:
-* node.js
+* node.js (0.10.16)
 * rar dosyalarını çözümlemek için komut satırından çalışan unrar uygulaması.
 * Altyazı dosyalarının karakterlerini çözümlemek için libicu paketine ihtiyaç var. Bunla alakalı kurulum için https://github.com/mooz/node-icu-charset-detector projesinin açıklamalarına göz atılmalı.
 
-# Mac ortamı için gereksinimlerin kurulum
+### Mac ortamı için gereksinimlerin kurulum
 
 Homebrew kullananlar için:
 ```bash
