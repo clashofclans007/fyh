@@ -3,6 +3,10 @@ var request = require('request');
 var jsdom   = require('jsdom');
 
 module.exports = function(req, res){
+    res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.header("Pragma", "no-cache");
+    res.header("Expires", 0);
+
     var searchUrl = 'http://www.opensubtitles.org/en/search/sublanguageid-all/idmovie-' + req.query.id;
 
     request(searchUrl, function(error, response, body){

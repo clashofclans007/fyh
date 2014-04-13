@@ -7,6 +7,10 @@ var request = require('request');
 var jsdom = require('jsdom');
 
 module.exports = function(req, res){
+    res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.header("Pragma", "no-cache");
+    res.header("Expires", 0);
+
     var page = req.query.page || 0;
     var searchParam = req.query.search;
     var searchUrl = 'http://194.71.107.83/search/' + searchParam + '/' + page + '/3/0';

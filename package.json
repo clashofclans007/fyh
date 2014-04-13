@@ -1,18 +1,19 @@
 {
-    "name": "torrent-manager",
-    "version": "0.0.1",
-    "dependencies": {
-        "express": "3.x",
-        "underscore": "1.6.0",
-        "async": "0.2.5",
-        "subtitles-parser": "latest",
-        "unzip": "0.1.8",
-        "node-icu-charset-detector": "latest",
-        "iconv": "2.0.7",
-        "request": "2.33.0",
-        "jsdom": "0.10.5",
-        "rimraf": "2.2.6",
-        "torrent-stream": "0.6.0",
-        "mkdirp": "0.3.5"
-    }
+  "name": "torrent-manager",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "3.x",
+    "underscore": "1.6.0",
+    "async": "0.2.5",
+    "subtitles-parser": "latest",
+    "unzip": "0.1.8",
+    "node-icu-charset-detector": "latest",
+    "iconv": "2.0.7",
+    "request": "2.33.0",
+    "jsdom": "0.10.5",
+    "rimraf": "2.2.6",
+    "torrent-stream": "0.6.0",
+    "mkdirp": "0.3.5",
+    "sqlite3": "^2.2.1"
+  }
 }

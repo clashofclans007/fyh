@@ -25,6 +25,10 @@ function bufferToString(buffer) {
 }
 
 module.exports = function(req, res){
+    res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.header("Pragma", "no-cache");
+    res.header("Expires", 0);
+
     var realPath = config.repository + '/' + path.normalize(req.params[0]);
     var buffer = fs.readFileSync(realPath);
     var data = srt.fromSrt(bufferToString(buffer));

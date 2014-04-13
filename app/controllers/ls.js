@@ -18,6 +18,10 @@ function bytesToSize(bytes) {
 }
 
 module.exports = function(req, res){
+    res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.header("Pragma", "no-cache");
+    res.header("Expires", 0);
+
     var currentPath = '/';
     if (req.params[0] !== undefined) {
         currentPath = '/' + path.normalize(req.params[0]);

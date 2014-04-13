@@ -5,6 +5,10 @@ var fs      = require('fs');
 var config  = require('../../config');
 
 module.exports = function(req, res){
+    res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.header("Pragma", "no-cache");
+    res.header("Expires", 0);
+
     var downloadUrl = 'http://www.opensubtitles.org/en/subtitleserve/sub/' + req.query.id;
     var realPath = config.repository;
 

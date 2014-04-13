@@ -6,15 +6,11 @@ module.exports = function(req, res){
     res.header("Pragma", "no-cache");
     res.header("Expires", 0);
 
-    var name    = req.query.name;
-    var magnet  = req.query.magnet;
+    var key = req.query.key;
 
-    var row = {
-        name: name,
-        magnet: magnet
-    };
-
-    torrentManager.start(row, function(row){
-        res.send(row)
+    torrentManager.remove(key, function(status){
+        res.send({
+            status: status
+        });
     });
 };

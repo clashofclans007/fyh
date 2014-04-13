@@ -196,10 +196,6 @@
         </div>
     </script>
 
-    <script type="text/x-handlebars" id="download-manager">
-        <h1>Download Manager</h1>
-    </script>
-
     <script type="text/x-handlebars" id="torrent-search">
         <div style="margin-bottom: 20px;">
             <form class="form-inline">
@@ -284,6 +280,33 @@
                             </li>
                         {{/each}}
                     </ul>
+                </div>
+            </td>
+        </tr>
+    </script>
+
+    <script type="text/x-handlebars" id="download-manager">
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each torrents}}
+                    {{render "download-manager-item" this}}
+                {{/each}}
+            </tbody>
+        </table>
+    </script>
+
+    <script type="text/x-handlebars" id="download-manager-item">
+        <tr>
+            <td>
+                <strong>{{key}}</strong>
+                <div style="margin-top: 10px;">
+                    <a href="javascript:;" {{action 'remove'}}>Remove</a>
+                    <div class="clearfix"></div>
                 </div>
             </td>
         </tr>
