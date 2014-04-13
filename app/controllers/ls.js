@@ -40,7 +40,7 @@ module.exports = function(req, res){
             item.size = Util.bytesToSize(stat.size);
             // TODO : Check other formats
             var extension = path.extname(itemPath);
-            if (extension == '.mp4' || extension == '.mkv' || extension == '.avi' || extension == '.mpg' || extension == '.mpeg') {
+            if (extension == '.mp4' || extension == '.mkv' || extension == '.webm') {
                 item.isVideo = true;
             } else if(extension == '.srt') {
                 item.isSubtitle = true;
@@ -48,6 +48,14 @@ module.exports = function(req, res){
                 item.isArchive = true;
             } else {
                 item.isNormal = true;
+            }
+
+            if (extension == '.mp4') {
+                item.contentType = 'video/mp4';
+            } else if (extension == '.mkv') {
+                item.contentType = 'video/mkv';
+            } else if (extension == '.webm') {
+                item.contentType = 'video/webm';
             }
 
             files.push(item);

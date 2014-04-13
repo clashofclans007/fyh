@@ -5,7 +5,7 @@ $(function(){
 
     App.Router.map(function(){
         this.route('file-manager');
-        this.route('video', { path: '/video/:path' });
+        this.route('video');
         this.route('download-manager');
         this.route('torrent-search');
         this.route('subtitle-search');
@@ -105,6 +105,11 @@ $(function(){
                     console.log(response);
                     currentObject.get('controllers.file-manager').send('refresh');
                 });
+            },
+            watch: function(path, contentType) {
+                this.get('controllers.video').set('path', path);
+                this.get('controllers.video').set('contentType', contentType);
+                this.transitionToRoute('video');
             }
         }
     });
@@ -146,18 +151,11 @@ $(function(){
         }
     });
 
-    // Video Route
-    App.VideoRoute = Ember.Route.extend({
-        model: function(params){
-            return {
-                path: params.path
-            }
-        }
-    });
-
     // Video Controller
     App.VideoController = Ember.ObjectController.extend({
-        subtitle: null
+        subtitle: null,
+        contentType: '',
+        path: ''
     });
 
     // Torrent Search Controller

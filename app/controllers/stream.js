@@ -5,6 +5,16 @@ var config  = require('../../config');
 module.exports = function(req, res){
     var currentPath = path.normalize(req.query.path || '/');
     var realPath    = config.repository + currentPath;
+    var extname     = path.extname(realPath);
+    var contentType = 'video/mp4';
+
+    if (extname == '.mkv'){
+        contentType = 'video/mkv';
+    } else if (extname == '.webm') {
+        contentType = 'video/webm';
+    } else if (extname == '.ogv') {
+        contentType = 'video/ogg';
+    }
 
     var stat = fs.statSync(realPath)
         , total = stat.size;
@@ -25,7 +35,7 @@ module.exports = function(req, res){
         res.writeHead(206
             , { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total
                 , 'Accept-Ranges': 'bytes', 'Content-Length': chunksize
-                , 'Content-Type': 'video/mp4'
+                , 'Content-Type': contentType
             });
         file.pipe(res);
     }
@@ -33,7 +43,7 @@ module.exports = function(req, res){
         console.log('ALL: ' + total);
         res.writeHead(200
             , { 'Content-Length': total
-                , 'Content-Type': 'video/mp4'
+                , 'Content-Type': contentType
             });
         fs.createReadStream(realPath).pipe(res);
     }
