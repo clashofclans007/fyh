@@ -55,11 +55,21 @@ var TorrentEngineManager = {
         // Engine oluşma bilgisi önce gönderilmeli. Ready durumuna geçmesi biraz vakit alabiliyor.
         callback(row);
 
-        engine.on('ready', function(){
-            // TODO : Torrenta bağlı dosyalar veritabanına eklenmeli ve indirme işlemi tamamlandığında işaretlenmeli.
-            console.log(__filename, 'The engine is ready for torrent: ' + row.name + ' key: ' + row.key);
+        TorrentDbManager.updateTorrentStatus(row.key, 'Waiting torrent information...');
 
-            engine.files.forEach(function(file){
+        engine.on('ready', function(){
+            console.log('The engine is ready for torrent: ' + row.name + ' key: ' + row.key);
+            TorrentDbManager.updateTorrentStatus(row.key, 'Starting...');
+
+            _.each(engine.files, function(file){
+                TorrentDbManager.addFileToTorrent(row.key, {
+                    name: file.name,
+                    path: file.path,
+                    size: file.length
+                });
+            });
+
+            _.each(engine.files, function(file){
                 // Torrent içeriğindeki dizin yapısını korumak için mkdirp ile ilgili dizin oluşturuluyor.
                 var torrentPath = config.repository + '/' + row.name;
                 mkdirp(path.dirname(torrentPath + '/' + file.path), function(){
@@ -67,6 +77,18 @@ var TorrentEngineManager = {
                     file.createReadStream().pipe(fs.createWriteStream(torrentPath + '/' + file.path));
                 });
             });
+        });
+
+        engine.on('error', function(){
+            console.log('An error occurred for torrent: ', row.name + ' key: ' + row.key + ' error:', err);
+        });
+
+        engine.on('download', function(pieceIndex){
+            console.log('Downloaded piece for torrent: ', row.name + ' key: ' + row.key + ' index:', pieceIndex);
+        });
+
+        engine.on('upload', function(pieceIndex, offset, length){
+            console.log('Uploaded piece for torrent: ', row.name + ' key: ' + row.key + ' index:', pieceIndex);
         });
     },
 
@@ -80,12 +102,14 @@ var TorrentEngineManager = {
         var currentObject = this;
 
         if (this.engines[key] !== undefined) {
-            this.engines[key].destroy(); // İstemciyi durdur, bağlantıları kapat.
-            // Tüm cache dsyalarını sil.
-            this.engines[key].remove(function(){
-                delete currentObject.engines[key];
-                console.log(__filename, 'The cache files have been removed for torrent: ' + key);
-                callback();
+            // İstemciyi durdur, bağlantıları kapat.
+            this.engines[key].destroy(function(){
+                // Tüm cache dsyalarını sil.
+                currentObject.engines[key].remove(function(){
+                    delete currentObject.engines[key];
+                    console.log('The cache files have been removed for torrent: ' + key);
+                    callback();
+                });
             });
         } else {
             // Herhangi bir istemci yoksa devam et.
@@ -95,7 +119,8 @@ var TorrentEngineManager = {
 };
 
 // DB Section
-db.run('CREATE TABLE IF NOT EXISTS torrent(key, name, magnet)');
+db.run('CREATE TABLE IF NOT EXISTS torrent(key, name, magnet, status, is_downloaded)');
+db.run('CREATE TABLE IF NOT EXISTS torrent_file(torrent_key, name, path, size, downloaded, uploaded, is_downloaded)');
 
 var TorrentDbManager = {
     /**
@@ -107,7 +132,7 @@ var TorrentDbManager = {
     hasKey: function(key, callback) {
         db.get('SELECT COUNT(*) AS count FROM torrent WHERE key = $key', {$key: key}, function(err, row){
             if (err) {
-                console.log(__filename, err);
+                console.log(err);
                 callback(false);
                 return;
             }
@@ -125,7 +150,7 @@ var TorrentDbManager = {
     findKey: function(key, callback) {
         db.get('SELECT * FROM torrent WHERE key = $key', {$key: key}, function(err, row){
             if (err) {
-                console.log(__filename, err);
+                console.log(err);
                 callback(null);
                 return;
             }
@@ -149,7 +174,7 @@ var TorrentDbManager = {
             $magnet: row.magnet
         }, function(err) {
             if (err) {
-                console.log(__filename, err);
+                console.log(err);
                 callback(false);
                 return;
             }
@@ -166,7 +191,7 @@ var TorrentDbManager = {
     findAll: function(callback){
         db.all('SELECT * FROM torrent', function(err, rows){
             if (err) {
-                console.log(__filename, err);
+                console.log(err);
                 callback([]);
                 return;
             }
@@ -176,20 +201,87 @@ var TorrentDbManager = {
     },
 
     /**
-     * İlgili anahtara bağlı satırı siler.
+     * İlgili anahtara bağlı torrent bilgilerini siler.
      *
      * @param key Torrent için üretilen anahtar.
      * @param callback Başarılı silme işlemi için true, başarısız bir işlem için false değerini döner.
      */
     remove: function(key, callback) {
-        db.run('DELETE FROM torrent WHERE key = $key', {$key: key}, function(err){
+        db.run('DELETE FROM torrent_file WHERE torrent_key = $key', {$key: key}, function(err){
             if (err) {
-                console.log(__filename, err);
+                console.log(err);
+                callback(false);
+                return;
+            }
+
+            db.run('DELETE FROM torrent WHERE key = $key', {$key: key}, function(err){
+                if (err) {
+                    console.log(err);
+                    callback(false);
+                    return;
+                }
+
+                callback(true);
+            });
+        });
+    },
+
+    /**
+     * Torrent durumunu değiştirir.
+     *
+     * @param key Torrent için üretien anahtar
+     * @param status yeni torrent durumu.
+     * @param callback Başarılı güncelleme işleminde true, başarısız işlem için false değerini döner.
+     */
+    updateTorrentStatus: function(key, status, callback) {
+        if (callback == undefined) {
+            callback = function(){};
+        }
+
+        db.run('UPDATE torrent SET status = $status', {$status: status}, function(err){
+            if (err) {
+                console.log(err);
                 callback(false);
                 return;
             }
 
             callback(true);
+        });
+    },
+
+    /**
+     * Bir dosyayı torrenta bağlar.
+     *
+     * @param torrentKey Torrent için üretilen anahtar.
+     * @param fileRow Dosya bilgilerini taşıyan obje. Obje içerisinde name, size, path değerleri bulunmalı.
+     * @param callback Başarılı işlem durumunda true, başarısız işlemde false dönülür.
+     */
+    addFileToTorrent: function(torrentKey, fileRow, callback) {
+        if (callback == undefined){
+            callback = function(){};
+        }
+
+        // Dosya daha önce bağlanmışsa es geç.
+        db.get('SELECT COUNT(*) AS count FROM torrent_file WHERE path = $path', {$path: fileRow.path}, function(err, row){
+            if (row.count > 0) {
+                callback(true);
+                return;
+            }
+
+            db.run('INSERT INTO torrent_file(torrent_key, name, size, path) VALUES($torrentKey, $name, $size, $path)', {
+                $torrentKey: torrentKey,
+                $name: fileRow.name,
+                $size: fileRow.size,
+                $path: fileRow.path
+            }, function(err){
+                if (err) {
+                    console.log(err);
+                    callback(false);
+                    return;
+                }
+
+                callback(true);
+            });
         });
     }
 };
@@ -205,7 +297,7 @@ module.exports = {
         // Eğer torrent için engine çalışıyorsa herhangi bir işlem yapma ve olumlu geri dönüş yap.
         var currentObject = this;
         row.key = generateKey(row.magnet);
-        row.status = true;
+        row.error = true;
         if (engines[row.key] !== undefined) {
             callback(row);
             return;
@@ -217,7 +309,7 @@ module.exports = {
                 // Bu yeni bir torrent. Veritabanına kaydet ve torrent indirme işlemini başlat.
                 TorrentDbManager.insert(row, function(status){
                     if (status == false) {
-                        row.status = false;
+                        row.error = false;
                         callback(row);
                         return;
                     }
@@ -248,6 +340,9 @@ module.exports = {
      * @param callback Torrent bilgilerinin bulunduğu bir dizi döner.
      */
     getTorrents: function(callback){
-        TorrentDbManager.findAll(callback);
+        TorrentDbManager.findAll(function(rows){
+
+            callback(rows);
+        });
     }
 };

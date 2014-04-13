@@ -1,4 +1,8 @@
 // Dependencies
+require('./console-trace')({
+    always: true
+});
+
 var http    = require('http');
 var express = require('express');
 var config  = require('./config');
