@@ -286,6 +286,9 @@
     </script>
 
     <script type="text/x-handlebars" id="download-manager">
+        <div style="margin: 10px 0">
+            <a href="javascript:;" {{action 'refresh'}}>Refresh</a>
+        </div>
         <table class="table table-bordered table-striped table-hover">
             <thead>
                 <tr>
@@ -305,7 +308,10 @@
             <td>
                 <strong>{{name}}</strong>
                 <div style="margin-top: 10px">
-                    <span class="label label-info">{{status}}</span>
+                    <span class="label label-info">Size</span> {{size}}
+                    <span class="label label-info">Status</span> {{status}}
+                    <span class="label label-info">Downloaded</span> {{downloaded}}
+                    <span class="label label-info">Uploaded</span> {{uploaded}}
                 </div>
                 <div style="margin-top: 10px;">
                     <a href="javascript:;" {{action 'remove'}}>Remove</a>

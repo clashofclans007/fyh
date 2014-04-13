@@ -1,6 +1,8 @@
+var _                       = require('underscore');
 var crypto                  = require('crypto');
 var TorrentDbManager        = require('./db_manager');
 var TorrentEngineManager    = require('./engine_manager');
+var Util                    = require('../util');
 
 /**
  * Magnet üzerinden bir key oluşturur.
@@ -24,7 +26,7 @@ module.exports = {
     start: function(row, callback){
         var currentObject = this;
         row.key = generateKey(row.magnet);
-        row.error = true;
+        row.error = false;
 
         // Eğer torrent için engine çalışıyorsa herhangi bir işlem yapma ve olumlu geri dönüş yap.
         if (TorrentEngineManager.hasKey(row.key)) {
@@ -38,7 +40,7 @@ module.exports = {
                 // Bu yeni bir torrent. Veritabanına kaydet ve torrent indirme işlemini başlat.
                 TorrentDbManager.insert(row, function(status){
                     if (status == false) {
-                        row.error = false;
+                        row.error = true;
                         callback(row);
                         return;
                     }
@@ -70,6 +72,13 @@ module.exports = {
      */
     getTorrents: function(callback){
         TorrentDbManager.findAll(function(rows){
+
+            _.each(rows, function(row, key){
+                rows[key].uploaded = Util.bytesToSize(row.uploaded, 2);
+                rows[key].downloaded = Util.bytesToSize(row.downloaded, 2);
+                rows[key].size = Util.bytesToSize(row.size, 2);
+            });
+
             callback(rows);
         });
     }

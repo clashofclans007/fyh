@@ -57,16 +57,15 @@ module.exports = {
         TorrentDbManager.updateTorrentStatus(row.key, 'Waiting torrent information...');
 
         engine.on('ready', function(){
-            console.log('The engine is ready for torrent: ' + row.name + ' key: ' + row.key);
-            TorrentDbManager.updateTorrentStatus(row.key, 'Starting...');
+            TorrentDbManager.updateTorrentStatus(row.key, 'Downloading...');
 
+            // Torrent dosya bilgileri alınıyor.
+            var torrentSize = 0;
             _.each(engine.files, function(file){
-                TorrentDbManager.addFileToTorrent(row.key, {
-                    name: file.name,
-                    path: file.path,
-                    size: file.length
-                });
+                torrentSize+= file.length;
             });
+
+            TorrentDbManager.updateTorrentSize(row.key, torrentSize);
 
             _.each(engine.files, function(file){
                 // Torrent içeriğindeki dizin yapısını korumak için mkdirp ile ilgili dizin oluşturuluyor.
@@ -83,11 +82,11 @@ module.exports = {
         });
 
         engine.on('download', function(pieceIndex){
-            console.log('Downloaded piece for torrent: ', row.name + ' key: ' + row.key + ' index:', pieceIndex);
+            TorrentDbManager.updateTorrentDownloaded(row.key, engine.swarm.downloaded);
         });
 
         engine.on('upload', function(pieceIndex, offset, length){
-            console.log('Uploaded piece for torrent: ', row.name + ' key: ' + row.key + ' index:', pieceIndex);
+            TorrentDbManager.updateTorrentUploaded(row.key, engine.swarm.uploaded);
         });
     },
 

@@ -1,9 +1,11 @@
+/**
+ * TODO: update metodlarını teke düşür.
+ */
 var sqlite3 = require('sqlite3').verbose();
 var db      = new sqlite3.Database('./app/app.db');
 
 // DB Section
-db.run('CREATE TABLE IF NOT EXISTS torrent(key, name, magnet, status, is_downloaded)');
-db.run('CREATE TABLE IF NOT EXISTS torrent_file(torrent_key, name, path, size, downloaded, uploaded, is_downloaded)');
+db.run('CREATE TABLE IF NOT EXISTS torrent(key, name, magnet, size, downloaded, uploaded, status)');
 
 module.exports = {
     /**
@@ -90,22 +92,14 @@ module.exports = {
      * @param callback Başarılı silme işlemi için true, başarısız bir işlem için false değerini döner.
      */
     remove: function(key, callback) {
-        db.run('DELETE FROM torrent_file WHERE torrent_key = $key', {$key: key}, function(err){
+        db.run('DELETE FROM torrent WHERE key = $key', {$key: key}, function(err){
             if (err) {
                 console.log(err);
                 callback(false);
                 return;
             }
 
-            db.run('DELETE FROM torrent WHERE key = $key', {$key: key}, function(err){
-                if (err) {
-                    console.log(err);
-                    callback(false);
-                    return;
-                }
-
-                callback(true);
-            });
+            callback(true);
         });
     },
 
@@ -132,39 +126,73 @@ module.exports = {
         });
     },
 
+
     /**
-     * Bir dosyayı torrenta bağlar.
+     * Torrent boyut bilgisini değiştirir.
      *
-     * @param torrentKey Torrent için üretilen anahtar.
-     * @param fileRow Dosya bilgilerini taşıyan obje. Obje içerisinde name, size, path değerleri bulunmalı.
-     * @param callback Başarılı işlem durumunda true, başarısız işlemde false dönülür.
+     * @param key Torrent için üretien anahtar
+     * @param size Torrent içerisindeki tüm dosyaların boyutu.
+     * @param callback Başarılı güncelleme işleminde true, başarısız işlem için false değerini döner.
      */
-    addFileToTorrent: function(torrentKey, fileRow, callback) {
-        if (callback == undefined){
+    updateTorrentSize: function(key, size, callback) {
+        if (callback == undefined) {
             callback = function(){};
         }
 
-        // Dosya daha önce bağlanmışsa es geç.
-        db.get('SELECT COUNT(*) AS count FROM torrent_file WHERE path = $path', {$path: fileRow.path}, function(err, row){
-            if (row.count > 0) {
-                callback(true);
+        db.run('UPDATE torrent SET size = $size', {$size: size}, function(err){
+            if (err) {
+                console.log(err);
+                callback(false);
                 return;
             }
 
-            db.run('INSERT INTO torrent_file(torrent_key, name, size, path) VALUES($torrentKey, $name, $size, $path)', {
-                $torrentKey: torrentKey,
-                $name: fileRow.name,
-                $size: fileRow.size,
-                $path: fileRow.path
-            }, function(err){
-                if (err) {
-                    console.log(err);
-                    callback(false);
-                    return;
-                }
+            callback(true);
+        });
+    },
 
-                callback(true);
-            });
+    /**
+     * İndirilen torrent parçalarının boyutunu günceller.
+     *
+     * @param key Torrent için üretien anahtar
+     * @param downloaded İndirien torrent parçaları boyutu.
+     * @param callback Başarılı güncelleme işleminde true, başarısız işlem için false değerini döner.
+     */
+    updateTorrentDownloaded: function(key, downloaded, callback) {
+        if (callback == undefined) {
+            callback = function(){};
+        }
+
+        db.run('UPDATE torrent SET downloaded = $downloaded', {$downloaded: downloaded}, function(err){
+            if (err) {
+                console.log(err);
+                callback(false);
+                return;
+            }
+
+            callback(true);
+        });
+    },
+
+    /**
+     * Gönderilen torrent parçalarının boyutu verisini günceller.
+     *
+     * @param key Torrent için üretien anahtar
+     * @param uploaded Gönderilen torrent parçalarının boyutu.
+     * @param callback Başarılı güncelleme işleminde true, başarısız işlem için false değerini döner.
+     */
+    updateTorrentUploaded: function(key, uploaded, callback) {
+        if (callback == undefined) {
+            callback = function(){};
+        }
+
+        db.run('UPDATE torrent SET uploaded = $uploaded', {$uploaded: uploaded}, function(err){
+            if (err) {
+                console.log(err);
+                callback(false);
+                return;
+            }
+
+            callback(true);
         });
     }
 };

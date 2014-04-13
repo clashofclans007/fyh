@@ -5,17 +5,8 @@
 var _       = require('underscore');
 var path    = require('path');
 var fs      = require('fs');
+var Util    = require('../../util');
 var config  = require('../../config');
-
-/**
- * @see http://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript
- */
-function bytesToSize(bytes) {
-    var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    if (bytes == 0) return '0 Bytes';
-    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-    return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
-}
 
 module.exports = function(req, res){
     res.header("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -47,7 +38,7 @@ module.exports = function(req, res){
         };
 
         if (stat.isFile()) {
-            item.size = bytesToSize(stat.size);
+            item.size = Util.bytesToSize(stat.size);
             // TODO : Check other formats
             var extension = path.extname(itemPath);
             if (extension == '.mp4') {
