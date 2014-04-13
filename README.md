@@ -23,5 +23,5 @@ $ npm install
 
 Sunucunun çalıştırılması:
 ```bash
-$ node server.js
+$ nohup node server.js > output.log &
 ```

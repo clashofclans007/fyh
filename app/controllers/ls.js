@@ -41,7 +41,7 @@ module.exports = function(req, res){
             item.size = Util.bytesToSize(stat.size);
             // TODO : Check other formats
             var extension = path.extname(itemPath);
-            if (extension == '.mp4') {
+            if (extension == '.mp4' || extension == '.mkv' || extension == '.avi' || extension == '.mpg' || extension == '.mpeg') {
                 item.isVideo = true;
             } else if(extension == '.srt') {
                 item.isSubtitle = true;
