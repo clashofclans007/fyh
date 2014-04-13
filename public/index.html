@@ -162,7 +162,7 @@
                     {{/if}}
 
                     {{#if isVideo}}
-                        {{#link-to 'video' fileUrl}}<span class="fa fa-video-camera"></span> Watch{{/link-to}}
+                        {{#link-to 'video' path}}<span class="fa fa-video-camera"></span> Watch{{/link-to}}
                     {{/if}}
 
                     {{#if isSubtitle}}
@@ -191,7 +191,7 @@
                 {{#if subtitle}}
                     <track kind="subtitles" label="{{unbound subtitle.name}}" src="/api/v1/subtitle{{unbound subtitle.path}}" default></track>
                 {{/if}}
-                <source src="{{unbound fileUrl}}" type="video/mp4" />
+                <source src="/api/v1/stream?path={{unbound path}}" type="video/mp4" />
             </video>
         </div>
     </script>

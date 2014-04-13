@@ -19,6 +19,7 @@ app.use(function(req, res, next){
 });
 
 // Routes
+app.get('/api/v1/stream', require('./app/controllers/stream'));
 app.get('/api/v1/torrent-list', require('./app/controllers/torrent_list'));
 app.get('/api/v1/torrent-start', require('./app/controllers/torrent_start'));
 app.get('/api/v1/torrent-remove', require('./app/controllers/torrent_remove'));

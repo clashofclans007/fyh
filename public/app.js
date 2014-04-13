@@ -5,7 +5,7 @@ $(function(){
 
     App.Router.map(function(){
         this.route('file-manager');
-        this.route('video', { path: '/video/:fileUrl' });
+        this.route('video', { path: '/video/:path' });
         this.route('download-manager');
         this.route('torrent-search');
         this.route('subtitle-search');
@@ -150,7 +150,7 @@ $(function(){
     App.VideoRoute = Ember.Route.extend({
         model: function(params){
             return {
-                fileUrl: params.fileUrl
+                path: params.path
             }
         }
     });
