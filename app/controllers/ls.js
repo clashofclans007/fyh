@@ -33,8 +33,7 @@ module.exports = function(req, res){
         var itemPath = currentPath + item;
         item = {
             name: item,
-            path: itemPath,
-            fileUrl: Util.getAppUrl() + itemPath
+            path: itemPath
         };
 
         if (stat.isFile()) {
