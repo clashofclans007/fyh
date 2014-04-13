@@ -1,3 +1,5 @@
+var config = require('./config');
+
 function bytesToSize(bytes, precision)
 {
     var kilobyte = 1024;
@@ -24,6 +26,16 @@ function bytesToSize(bytes, precision)
     }
 }
 
+function getAppUrl(){
+    var url = config.appServerHost;
+    if (config.appServerPort !== 80) {
+        url += ':' + config.appServerPort;
+    }
+
+    return 'http://' + url;
+}
+
 module.exports = {
-    bytesToSize: bytesToSize
+    bytesToSize: bytesToSize,
+    getAppUrl: getAppUrl
 };

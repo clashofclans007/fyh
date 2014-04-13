@@ -1,16 +1,6 @@
 module.exports = {
     repository: '/Users/omer/Downloads',
-    streamUrl: '192.168.1.210',
-    streamPortRange: [9000, 9999],
     appServerHost: '192.168.1.210',
     appServerPort: 8080,
-
-    getAppUrl: function(){
-        var url = this.appServerHost;
-        if (this.appServerPort !== 80) {
-            url += this.appServerPort;
-        }
-
-        return 'http://' + url;
-    }
+    appDbPath: '/Users/omer/Downloads/torrent-manager.db'
 };

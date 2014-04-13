@@ -2,7 +2,8 @@
  * TODO: update metodlarını teke düşür.
  */
 var sqlite3 = require('sqlite3').verbose();
-var db      = new sqlite3.Database('./app/app.db');
+var config  = require('../config');
+var db      = new sqlite3.Database(config.appDbPath);
 
 // DB Section
 db.run('CREATE TABLE IF NOT EXISTS torrent(key, name, magnet, size, downloaded, uploaded, status)');

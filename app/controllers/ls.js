@@ -34,7 +34,7 @@ module.exports = function(req, res){
         item = {
             name: item,
             path: itemPath,
-            fileUrl: config.getAppUrl() + itemPath
+            fileUrl: Util.getAppUrl() + itemPath
         };
 
         if (stat.isFile()) {
