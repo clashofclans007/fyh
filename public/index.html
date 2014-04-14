@@ -300,8 +300,12 @@
         <tr>
             <td>
                 <strong>{{name}}</strong>
-                <div style="margin-top: 10px;">
-                    <span class="pull-left" style="margin-right:10px;"><span class="label label-info">Latest Update</span> {{latestUpdate}}</span>
+                <div style="margin-top: 10px; font-size: 11px;">
+                    <span class="pull-left" style="margin-right:10px;"><strong>Movie Year</strong>: {{year}}</span>
+                    <span class="pull-left" style="margin-right:10px;"><strong>Type</strong>: {{movieKind}}</span>
+                    <span class="pull-left" style="margin-right:10px;"><strong>Season</strong>: {{seriesSeason}}</span>
+                    <span class="pull-left" style="margin-right:10px;"><strong>Episode</strong>: {{seriesEpisode}}</span>
+                    <span class="pull-left" style="margin-right:10px;"><strong>Latest Update</strong>: {{latestUpdate}}</span>
                     <a href="javascript:;" class="pull-left" {{action 'showFiles'}}>Show Files ({{fileCount}})</a>
                     <div class="clearfix"></div>
                 </div>

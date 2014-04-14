@@ -1,9 +1,6 @@
-/**
- * @TODO : Sayfalama desteği
- */
-var _ = require('underscore');
+var _       = require('underscore');
 var request = require('request');
-var jsdom = require('jsdom');
+var xmlToJs = require('xml2js').parseString;
 
 module.exports = function(req, res){
     res.header("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -13,7 +10,7 @@ module.exports = function(req, res){
     var searchParam = req.query.search;
     var page = req.query.page;
     var offset = 40 * page;
-    var searchUrl = 'http://www.opensubtitles.org/en/search2/sublanguageid-all/moviename-' + searchParam + '/sort-2/asc-0/offset-' + offset;
+    var searchUrl = 'http://www.opensubtitles.org/en/search2/sublanguageid-all/moviename-' + searchParam + '/offset-' + offset + '/xml';
 
     request(searchUrl, function(error, response, body){
         if (error || response.statusCode != 200) {
@@ -21,31 +18,27 @@ module.exports = function(req, res){
             return;
         }
 
-        jsdom.env(body, ['http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js'], function(error, window){
-            var $ = window.$;
+        xmlToJs(body, function(err, result){
+            if (err) {
+                res.send([]);
+                return;
+            }
+
             var subtitles = [];
-            _.each($('#search_results tr'), function(item){
-                if ($(item).hasClass('head')) {
+            _.each(result.opensubtitles.search[0].results[0].subtitle, function(item){
+                if (item.ads1 !== undefined) {
                     return;
                 }
-
-                if (!$(item).attr('id')) {
-                    return;
-                }
-
-                var id = $(item).attr('id').replace('name', '');
-                var name = $('td a', item).eq(0).text();
-                if (name.length == 0) {
-                    return;
-                }
-                var fileCount = $('td', item).eq(3).text();
-                var latestUpdate = $('td', item).eq(4).text();
 
                 subtitles.push({
-                    id: id,
-                    name: name,
-                    fileCount: fileCount,
-                    latestUpdate: latestUpdate
+                    id: item.MovieID[0]._,
+                    name: item.MovieName[0],
+                    year: item.MovieYear[0],
+                    seriesSeason: item.SeriesSeason[0],
+                    seriesEpisode: item.SeriesEpisode[0],
+                    fileCount: item.TotalSubs[0],
+                    latestUpdate: item.Newest[0]._,
+                    movieKind: item.MovieKind[0]
                 });
             });
 
