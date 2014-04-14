@@ -64,7 +64,7 @@ $(function(){
 
     // Path Folder Controller
     App.PathFolderItemController = Ember.ObjectController.extend({
-        needs: ['file-manager'],
+        needs: ['file-manager', 'rename'],
         isMoveFile: function(){
             var moveFile = this.get('controllers.file-manager.moveFile');
             return moveFile != null && moveFile.name == this.get('name');
@@ -81,6 +81,11 @@ $(function(){
             },
             unsetMoveFile: function(){
                 this.get('controllers.file-manager').send('unsetMoveFile');
+            },
+            rename: function(){
+                this.get('controllers.rename').set('oldPath', this.get('path'));
+                this.get('controllers.rename').set('newPath', this.get('path'));
+                $('#rename-modal').modal('show');
             }
         }
     });
@@ -146,6 +151,22 @@ $(function(){
                     $('#create-folder-modal').modal('hide');
                     currentObject.set('folder', '');
                     currentObject.get('controllers.file-manager').send('refresh');
+                });
+            }
+        }
+    });
+
+    // Rename Controller
+    App.RenameController = Ember.ObjectController.extend({
+        oldPath: '',
+        newPath: '',
+        needs: ['file-manager'],
+        actions: {
+            rename: function(){
+                var currentObject = this;
+                Ember.$.getJSON('/api/v1/rename', { newPath: this.get('newPath'), 'path': this.get('oldPath')}).then(function(){
+                    currentObject.get('controllers.file-manager').send('refresh');
+                    $('#rename-modal').modal('hide');
                 });
             }
         }

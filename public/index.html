@@ -83,9 +83,32 @@
         </div>
     </script>
 
+    <script type="text/x-handlebars" id="rename">
+        <div class="modal fade" id="rename-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Rename Folder</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            {{input type="text" value=newPath class="form-control" placeholder="Name"}}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" {{action "rename"}}>Rename</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
     <script type="text/x-handlebars" id="file-manager">
         {{render 'upload-from-url'}}
         {{render 'create-folder'}}
+        {{render 'rename'}}
 
         <div style="margin-bottom: 10px;">
             <ol class="breadcrumb">
@@ -134,6 +157,7 @@
                     {{#unless isMoveFile}}
                         <a href="javascript:;" {{action 'cd'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-folder-open-o"></span> Open</a>
                     {{/unless}}
+                    <a href="javascript:;" {{action 'rename'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-edit"></span> Rename</a>
                     <a href="javascript:;" {{action 'unlink'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-trash-o"></span> Remove</a>
                     {{#if isMoveFile}}
                         <a href="javascript:;" {{action 'unsetMoveFile'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-briefcase"></span> Cancel Move</a>
@@ -154,6 +178,7 @@
                 {{name}}
                 <div style="margin-top: 10px;">
                     <a href="/api/v1/download?path={{unbound path}}" target="_blank" class="pull-left" style="margin-right: 10px;"><span class="fa fa-download"></span> Download</a>
+                    <a href="javascript:;" {{action 'rename'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-edit"></span> Rename</a>
                     <a href="javascript:;" {{action 'unlink'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-trash-o"></span> Remove</a>
                     {{#if isMoveFile}}
                         <a href="javascript:;" {{action 'unsetMoveFile'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-briefcase"></span> Cancel Move</a>

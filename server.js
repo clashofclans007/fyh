@@ -27,6 +27,7 @@ app.get('/api/v1/upload-from-url', require('./app/controllers/upload_from_file')
 app.get('/api/v1/torrent-search', require('./app/controllers/torrent_search'));
 app.get('/api/v1/subtitle-search', require('./app/controllers/subtitle_search'));
 app.get('/api/v1/move', require('./app/controllers/move'));
+app.get('/api/v1/rename', require('./app/controllers/rename'));
 app.get('/api/v1/subtitle-files', require('./app/controllers/subtitle_files'));
 app.get('/api/v1/upload-subtitle', require('./app/controllers/upload_subtitle'));
 app.get(/^\/api\/v1\/ls\/?(.*)?$/,require('./app/controllers/ls'));
