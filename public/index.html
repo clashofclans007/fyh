@@ -286,14 +286,6 @@
             {{/each}}
             </tbody>
         </table>
-
-        <div style="margin: 10px 0;">
-            Page : {{page}}
-            <ul class="pager">
-                <li><a href="javascript:;" {{action 'prevPage'}}>Previous</a></li>
-                <li><a href="javascript:;" {{action 'nextPage'}}>Next</a></li>
-            </ul>
-        </div>
     </script>
 
     <script type="text/x-handlebars" id="subtitle-search-item">
@@ -306,17 +298,8 @@
                     <span class="pull-left" style="margin-right:10px;"><strong>Season</strong>: {{seriesSeason}}</span>
                     <span class="pull-left" style="margin-right:10px;"><strong>Episode</strong>: {{seriesEpisode}}</span>
                     <span class="pull-left" style="margin-right:10px;"><strong>Latest Update</strong>: {{latestUpdate}}</span>
-                    <a href="javascript:;" class="pull-left" {{action 'showFiles'}}>Show Files ({{fileCount}})</a>
+                    <a href="javascript:;" class="pull-left" {{action 'uploadFile'}}>Upload</a>
                     <div class="clearfix"></div>
-                </div>
-                <div style="margin-top: 10px">
-                    <ul>
-                        {{#each files}}
-                            <li>
-                                <a href="javascript:;" {{action 'uploadFile' id}}><span class="fa fa-cloud-upload"></span> Upload</a> - {{cdCount}} - {{uploadDate}} - {{language}}
-                            </li>
-                        {{/each}}
-                    </ul>
                 </div>
             </td>
         </tr>

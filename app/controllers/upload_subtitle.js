@@ -9,7 +9,7 @@ module.exports = function(req, res){
     res.header("Pragma", "no-cache");
     res.header("Expires", 0);
 
-    var downloadUrl = 'http://www.opensubtitles.org/en/subtitleserve/sub/' + req.query.id;
+    var downloadUrl = req.query.url;
     var realPath = config.repository;
 
     request.head(downloadUrl, function(error, response){

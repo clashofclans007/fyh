@@ -218,24 +218,13 @@ $(function(){
     // Subtitle Search Controller
     App.SubtitleSearchController = Ember.ObjectController.extend({
         search: '',
-        page: 0,
         subtitles: [],
         actions: {
             search: function(){
                 var currentObject = this;
-                Ember.$.getJSON('/api/v1/subtitle-search', { search: this.get('search'), page: this.get('page') }).then(function(subtitles){
+                Ember.$.getJSON('/api/v1/subtitle-search', { search: this.get('search')}).then(function(subtitles){
                     currentObject.set('subtitles', subtitles);
                 });
-            },
-            nextPage: function(){
-                this.set('page', this.get('page') + 1);
-                this.send('search');
-            },
-            prevPage: function(){
-                if (this.get('page') > 0) {
-                    this.set('page', this.get('page') - 1);
-                    this.send('search');
-                }
             }
         }
     });
@@ -243,14 +232,8 @@ $(function(){
     // Subtitle Search Item Controller
     App.SubtitleSearchItemController = Ember.ObjectController.extend({
         actions: {
-            showFiles: function(){
-                var currentObject = this;
-                Ember.$.getJSON('/api/v1/subtitle-files', { id: this.get('id') }).then(function(files){
-                    currentObject.set('files', files);
-                });
-            },
-            uploadFile: function(fileId){
-                Ember.$.getJSON('/api/v1/upload-subtitle', { id: fileId }).then(function(){
+            uploadFile: function(){
+                Ember.$.getJSON('/api/v1/upload-subtitle', { url: this.get('downloadLink') }).then(function(){
                     alert('Uploaded');
                 });
             }
