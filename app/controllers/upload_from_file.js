@@ -7,6 +7,7 @@
 var path    = require('path');
 var url     = require('url');
 var request = require('request');
+var fs      = require('fs');
 var config  = require('../../config');
 
 module.exports = function(req, res){

@@ -36,6 +36,7 @@ $(function(){
 
                 var currentObject = this;
                 Ember.$.getJSON('/api/v1/unlink' + path).then(function(){
+                    alertify.success("Removed!");
                     currentObject.send('refresh');
                 });
             },
@@ -55,6 +56,7 @@ $(function(){
 
                 var currentObject = this;
                 Ember.$.getJSON('/api/v1/move', { newPath: this.get('currentPath'), 'path': this.get('moveFile').path}).then(function(){
+                    alertify.success('Selected path moved!');
                     currentObject.send('unsetMoveFile');
                     currentObject.send('refresh');
                 });
@@ -107,7 +109,7 @@ $(function(){
             extract: function(){
                 var currentObject = this;
                 return Ember.$.getJSON('/api/v1/extract', { path: this.get('path')}).then(function(response){
-                    console.log(response);
+                    alertify.success('Archive extracted!');
                     currentObject.get('controllers.file-manager').send('refresh');
                 });
             },
@@ -128,6 +130,7 @@ $(function(){
                 var currentObject = this;
                 var currentPath = this.get('controllers.file-manager').get('currentPath');
                 Ember.$.getJSON('/api/v1/upload-from-url', { url: this.get('url'), path: currentPath }).then(function(){
+                    alertify.success('The url uploaded to the server!');
                     $('#upload-from-url-modal').modal('hide');
                     currentObject.get('controllers.file-manager').send('refresh');
                 });
@@ -148,6 +151,7 @@ $(function(){
                 var currentObject = this;
                 var currentPath = this.get('controllers.file-manager').get('currentPath');
                 Ember.$.getJSON('/api/v1/mkdir', { folder: this.get('folder'), path: currentPath }).then(function(){
+                    alertify.success('Folder created!');
                     $('#create-folder-modal').modal('hide');
                     currentObject.set('folder', '');
                     currentObject.get('controllers.file-manager').send('refresh');
@@ -165,6 +169,7 @@ $(function(){
             rename: function(){
                 var currentObject = this;
                 Ember.$.getJSON('/api/v1/rename', { newPath: this.get('newPath'), 'path': this.get('oldPath')}).then(function(){
+                    alertify.success('Selected path renamed!');
                     currentObject.get('controllers.file-manager').send('refresh');
                     $('#rename-modal').modal('hide');
                 });
@@ -209,7 +214,7 @@ $(function(){
         actions: {
             start: function(){
                 Ember.$.getJSON('/api/v1/torrent-add', { magnet: this.get('magnet') }).then(function(){
-                    alert('Added!');
+                    alertify.success('Torrent added to the downoad manager!');
                 });
             }
         }
@@ -234,7 +239,7 @@ $(function(){
         actions: {
             uploadFile: function(){
                 Ember.$.getJSON('/api/v1/upload-subtitle', { url: this.get('downloadLink') }).then(function(){
-                    alert('Uploaded');
+                    alertify.success('Selected subtitle uploaded to the server!');
                 });
             }
         }
@@ -271,12 +276,14 @@ $(function(){
             start: function(){
                 var currentObject = this;
                 Ember.$.getJSON('/api/v1/torrent-start', {id: this.get('id')}).then(function(response){
+                    alertify.success('Torrent started!');
                     currentObject.get('controllers.download-manager').send('refresh');
                 });
             },
             stop: function(){
                 var currentObject = this;
                 Ember.$.getJSON('/api/v1/torrent-stop', {id: this.get('id')}).then(function(response){
+                    alertify.success('Torrent stopped!');
                     currentObject.get('controllers.download-manager').send('refresh');
                 });
             },
@@ -287,6 +294,7 @@ $(function(){
 
                 var currentObject = this;
                 Ember.$.getJSON('/api/v1/torrent-remove', {id: this.get('id')}).then(function(response){
+                    alertify.success('Torrent removed!');
                     currentObject.get('controllers.download-manager').send('refresh');
                 });
             }
