@@ -8,7 +8,7 @@ module.exports = function(req, res){
     var page        = req.query.page || 0;
     var searchParam = req.query.search;
 
-    kickass(searchParam, page, function(err, torrents){
+    kickass(searchParam, parseInt(page), function(err, torrents){
         if (err) {
             console.log(err);
             res.send([]);

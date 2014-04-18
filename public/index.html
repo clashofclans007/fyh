@@ -258,7 +258,7 @@
             <td>
                 <strong>{{name}}</strong>
                 <div style="margin-top:10px;">
-                    <a href="javascript:;" {{action 'start'}}>Start Download</a> - {{date}}
+                    <a href="javascript:;" {{action 'start'}}>Start Download</a> - {{size}} - {{date}}
                 </div>
             </td>
             <td>{{seeders}}</td>
@@ -327,14 +327,21 @@
         <tr>
             <td>
                 <strong>{{name}}</strong>
-                <div style="margin-top: 10px">
-                    <span class="label label-info">Size</span> {{size}}
-                    <span class="label label-info">Status</span> {{status}}
-                    <span class="label label-info">Downloaded</span> {{downloaded}}
-                    <span class="label label-info">Uploaded</span> {{uploaded}}
+                <div style="margin-top: 10px; font-size: 11px;">
+                    <span class="pull-left" style="margin-right:10px;"><strong>Size</strong>: {{totalSize}}</span>
+                    <span class="pull-left" style="margin-right:10px;"><strong>Status</strong>: {{status}}</span>
+                    <span class="pull-left" style="margin-right:10px;"><strong>Completed</strong>: %{{percentDone}}</span>
+                    <span class="pull-left" style="margin-right:10px;"><strong>Downloaded</strong>: {{downloaded}}</span>
+                    <span class="pull-left" style="margin-right:10px;"><strong>ETA</strong>: {{eta}}</span>
+                    <div class="clearfix"></div>
                 </div>
                 <div style="margin-top: 10px;">
-                    <a href="javascript:;" {{action 'remove'}}>Remove</a>
+                    {{#if isStopped}}
+                        <a href="javascript:;" {{action 'start'}} style="margin-right: 10px;">Start</a>
+                    {{else}}
+                        <a href="javascript:;" {{action 'stop'}} style="margin-right: 10px;">Stop</a>
+                    {{/if}}
+                    <a href="javascript:;" {{action 'remove'}} style="margin-right: 10px;">Remove</a>
                     <div class="clearfix"></div>
                 </div>
             </td>

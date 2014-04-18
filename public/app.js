@@ -208,8 +208,8 @@ $(function(){
     App.TorrentSearchItemController = Ember.ObjectController.extend({
         actions: {
             start: function(){
-                Ember.$.getJSON('/api/v1/torrent-start', { name: this.get('name'), magnet: this.get('magnet') }).then(function(row){
-                    console.log(row);
+                Ember.$.getJSON('/api/v1/torrent-add', { magnet: this.get('magnet') }).then(function(){
+                    alert('Added!');
                 });
             }
         }
@@ -263,16 +263,31 @@ $(function(){
 
     // Download Manager Item Controller
     App.DownloadManagerItemController = Ember.ObjectController.extend({
+        isStopped: function(){
+            return this.get('status') == 'STOPPED';
+        }.property('status'),
         needs: ['download-manager'],
         actions: {
+            start: function(){
+                var currentObject = this;
+                Ember.$.getJSON('/api/v1/torrent-start', {id: this.get('id')}).then(function(response){
+                    currentObject.get('controllers.download-manager').send('refresh');
+                });
+            },
+            stop: function(){
+                var currentObject = this;
+                Ember.$.getJSON('/api/v1/torrent-stop', {id: this.get('id')}).then(function(response){
+                    currentObject.get('controllers.download-manager').send('refresh');
+                });
+            },
             remove: function(){
                 if (!confirm('Are you sure?')) {
                     return;
                 }
 
                 var currentObject = this;
-                Ember.$.getJSON('/api/v1/torrent-remove', {key: this.get('key')}).then(function(response){
-                    currentObject.send('refresh');
+                Ember.$.getJSON('/api/v1/torrent-remove', {id: this.get('id')}).then(function(response){
+                    currentObject.get('controllers.download-manager').send('refresh');
                 });
             }
         }
