@@ -10,7 +10,7 @@ var config  = require('./config');
 // Application
 var app = express();
 app.use(express.static('public')); // Site directory.
-app.use(express.static(config.repository)); // Download directory.
+app.use(express.static(config.app.repository)); // Download directory.
 
 // Request logger
 app.use(function(req, res, next){
@@ -36,6 +36,6 @@ app.get(/^\/api\/v1\/subtitle\/?(.*)?$/, require('./app/controllers/subtitle'));
 app.get(/^\/api\/v1\/extract\/?(.*)?$/, require('./app/controllers/extract'));
 
 // Lets go!
-var server = app.listen(config.appServerPort, function(){
-    console.log('Listening on port %d', config.appServerPort);
+var server = app.listen(config.app.port, function(){
+    console.log('Listening on port %d', config.app.port);
 });

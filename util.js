@@ -1,5 +1,3 @@
-var config = require('./config');
-
 function bytesToSize(bytes, precision)
 {
     var kilobyte = 1024;

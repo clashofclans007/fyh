@@ -1,5 +1,5 @@
 /**
- * config.repository klasöründeki ya da istenilen alt dizinlerdeki dosya ve dizinleri döner.
+ * config.app.repository konumundaki ya da istenilen alt dizinlerdeki dosya ve dizinleri döner.
  */
 
 var _       = require('underscore');
@@ -22,7 +22,7 @@ module.exports = function(req, res){
         currentPath += '/';
     }
 
-    var realPath = config.repository + currentPath;
+    var realPath = config.app.repository + currentPath;
     var pathInfo = fs.readdirSync(realPath);
     var files = [];
     var folders = [];

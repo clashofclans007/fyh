@@ -4,7 +4,7 @@ var config  = require('../../config');
 
 module.exports = function(req, res){
     var currentPath = path.normalize(req.query.path || '/');
-    var realPath    = config.repository + currentPath;
+    var realPath    = config.app.repository + currentPath;
     var extname     = path.extname(realPath);
     var contentType = 'video/mp4';
 

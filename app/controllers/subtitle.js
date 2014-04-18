@@ -29,7 +29,7 @@ module.exports = function(req, res){
     res.header("Pragma", "no-cache");
     res.header("Expires", 0);
 
-    var realPath = config.repository + '/' + path.normalize(req.params[0]);
+    var realPath = config.app.repository + '/' + path.normalize(req.params[0]);
     var buffer = fs.readFileSync(realPath);
     var data = srt.fromSrt(bufferToString(buffer));
 

@@ -10,7 +10,7 @@ module.exports = function(req, res){
     res.header("Expires", 0);
 
     var downloadUrl = req.query.url;
-    var realPath = config.repository;
+    var realPath = config.app.repository;
 
     request.head(downloadUrl, function(error, response){
         if (error) {

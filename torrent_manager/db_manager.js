@@ -3,7 +3,7 @@
  */
 var sqlite3 = require('sqlite3').verbose();
 var config  = require('../config');
-var db      = new sqlite3.Database(config.appDbPath);
+var db      = new sqlite3.Database(config.app.db);
 
 // DB Section
 db.run('CREATE TABLE IF NOT EXISTS torrent(key, name, magnet, size, downloaded, uploaded, status)');

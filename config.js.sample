@@ -1,5 +1,11 @@
 module.exports = {
-    repository: '/Users/omer/Downloads',
-    appServerPort: 8080,
-    appDbPath: '/Users/omer/Downloads/torrent-manager.db'
+    app: {
+        repository: '/Users/omer/Downloads',
+        port: 8080,
+        db: '/Users/omer/Downloads/torrent-manager.db'
+    },
+    transmission: {
+        host: '127.0.0.1',
+        port: 9091
+    }
 };

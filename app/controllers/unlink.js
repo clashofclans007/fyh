@@ -14,7 +14,7 @@ module.exports = function(req, res){
     }
 
     var currentPath = '/' + path.normalize(req.params[0]);
-    var realPath    = config.repository + currentPath;
+    var realPath    = config.app.repository + currentPath;
 
     if (currentPath.indexOf('/download-cache') == 0) {
         res.send({});

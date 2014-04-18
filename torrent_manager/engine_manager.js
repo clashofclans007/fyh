@@ -33,7 +33,7 @@ module.exports = {
 
         var engine = torrentStream(row.magnet, {
             connections: 100,
-            path: config.repository + '/download-cache/' + row.name,
+            path: config.app.repository + '/download-cache/' + row.name,
             verify: true,
             dht: true,
             tracker: true
@@ -69,7 +69,7 @@ module.exports = {
 
             _.each(engine.files, function(file){
                 // Torrent içeriğindeki dizin yapısını korumak için mkdirp ile ilgili dizin oluşturuluyor.
-                var torrentPath = config.repository + '/' + row.name;
+                var torrentPath = config.app.repository + '/' + row.name;
                 mkdirp(path.dirname(torrentPath + '/' + file.path), function(){
                     // file.createReadStream oluşturulduğunda engine dosyaları indirmeye ya da göndermeye başlar.
                     file.createReadStream().pipe(fs.createWriteStream(torrentPath + '/' + file.path));

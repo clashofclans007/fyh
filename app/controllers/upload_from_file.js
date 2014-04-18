@@ -15,7 +15,7 @@ module.exports = function(req, res){
     res.header("Expires", 0);
 
     var currentPath = path.normalize(req.query.path || '/');
-    var realPath = config.repository + currentPath;
+    var realPath = config.app.repository + currentPath;
 
     var downloadUrl = req.query.url;
     var parsedUrl = url.parse(downloadUrl);
