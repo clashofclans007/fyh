@@ -3,19 +3,39 @@ require('./console-trace')({
     always: true
 });
 
-var http    = require('http');
-var express = require('express');
-var config  = require('./config');
+var http            = require('http');
+var express         = require('express');
+var passport        = require('passport');
+var BasicStrategy   = require('passport-http').BasicStrategy;
+var config          = require('./config');
+
+passport.use(new BasicStrategy(
+  function(username, password, done) {
+    if (username !== config.app.username && password !== config.app.password) {
+        return done(null, false);
+    }
+
+    return done(null, {username: username});
+  }
+));
 
 // Application
 var app = express();
-app.use(express.static('public')); // Site directory.
-app.use(express.static(config.app.repository)); // Download directory.
+app.configure(function(){
+    app.use(express.static('public')); // Site directory.
+    app.use(express.static(config.app.repository)); // Download directory.
 
-// Request logger
-app.use(function(req, res, next){
-    console.log('%s %s', req.method, req.url);
-    next();
+    // Request logger
+    app.use(function(req, res, next){
+        console.log('%s %s', req.method, req.url);
+        next();
+    });
+
+    // Authentication
+    app.use(passport.initialize());
+    app.use(passport.authenticate('basic', {
+        session: false
+    }));
 });
 
 // Routes
@@ -34,9 +54,9 @@ app.get('/api/v1/upload-subtitle', require('./app/controllers/upload_subtitle'))
 app.get('/api/v1/stream', require('./app/controllers/stream'));
 app.get('/api/v1/move', require('./app/controllers/move'));
 app.get('/api/v1/rename', require('./app/controllers/rename'));
-app.get(/^\/api\/v1\/ls\/?(.*)?$/,require('./app/controllers/ls'));
-app.get(/^\/api\/v1\/unlink\/?(.*)?$/,require('./app/controllers/unlink'));
-app.get(/^\/api\/v1\/mkdir\/?(.*)?$/,require('./app/controllers/mkdir'));
+app.get(/^\/api\/v1\/ls\/?(.*)?$/, require('./app/controllers/ls'));
+app.get(/^\/api\/v1\/unlink\/?(.*)?$/, require('./app/controllers/unlink'));
+app.get(/^\/api\/v1\/mkdir\/?(.*)?$/, require('./app/controllers/mkdir'));
 app.get(/^\/api\/v1\/subtitle\/?(.*)?$/, require('./app/controllers/subtitle'));
 app.get(/^\/api\/v1\/extract\/?(.*)?$/, require('./app/controllers/extract'));
 

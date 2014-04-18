@@ -16,6 +16,8 @@
     "callsite": "*",
     "opensubtitles-client": "1.1.4",
     "node-kickass": "latest",
-    "transmission": "latest"
+    "transmission": "latest",
+    "passport": "latest",
+    "passport-http": "latest"
   }
 }

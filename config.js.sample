@@ -1,7 +1,9 @@
 module.exports = {
     app: {
         repository: '/Users/omer/Downloads',
-        port: 8080
+        port: 8080,
+        username: "test",
+        password: "test"
     },
     transmission: {
         host: '127.0.0.1',
