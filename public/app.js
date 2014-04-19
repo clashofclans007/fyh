@@ -300,12 +300,34 @@ $(function(){
         search: '',
         language: 'tur',
         subtitles: [],
+        page: 0,
+        source: 'divxplanet',
+        sources: [
+            {
+                key: 'divxplanet',
+                name: 'DIVX Planet'
+            },
+            {
+                key: 'opensubtitles',
+                name: 'Open Subtitles'
+            }
+        ],
         actions: {
             search: function(){
                 var currentObject = this;
-                Ember.$.getJSON('/api/v1/subtitle-search', { search: this.get('search'), lang: this.get('language') }).then(function(subtitles){
+                Ember.$.getJSON('/api/v1/subtitle-search', { search: this.get('search'), lang: this.get('language'), source: this.get('source'), page: this.get('page') }).then(function(subtitles){
                     currentObject.set('subtitles', subtitles);
                 });
+            },
+            nextPage: function(){
+                this.set('page', this.get('page') + 1);
+                this.send('search');
+            },
+            prevPage: function(){
+                if (this.get('page') > 0) {
+                    this.set('page', this.get('page') - 1);
+                    this.send('search');
+                }
             }
         }
     });
