@@ -223,11 +223,12 @@ $(function(){
     // Subtitle Search Controller
     App.SubtitleSearchController = Ember.ObjectController.extend({
         search: '',
+        language: 'tur',
         subtitles: [],
         actions: {
             search: function(){
                 var currentObject = this;
-                Ember.$.getJSON('/api/v1/subtitle-search', { search: this.get('search')}).then(function(subtitles){
+                Ember.$.getJSON('/api/v1/subtitle-search', { search: this.get('search'), lang: this.get('language') }).then(function(subtitles){
                     currentObject.set('subtitles', subtitles);
                 });
             }

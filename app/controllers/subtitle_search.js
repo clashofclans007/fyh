@@ -6,7 +6,7 @@ module.exports = function(req, res){
     res.header("Pragma", "no-cache");
     res.header("Expires", 0);
 
-    OpenSubtitle.search('tur', req.query.search, function(results){
+    OpenSubtitle.search(req.query.lang, req.query.search, function(results){
         var subtitles = [];
         _.each(results, function(item){
             subtitles.push({
