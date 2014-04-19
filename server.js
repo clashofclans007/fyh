@@ -33,32 +33,29 @@ app.configure(function(){
 
     // Authentication
     app.use(passport.initialize());
-    app.use(passport.authenticate('basic', {
-        session: false
-    }));
 });
 
 // Routes
-app.get('/api/v1/torrent-list', require('./app/controllers/torrent_list'));
-app.get('/api/v1/torrent-add', require('./app/controllers/torrent_add'));
-app.get('/api/v1/torrent-start', require('./app/controllers/torrent_start'));
-app.get('/api/v1/torrent-stop', require('./app/controllers/torrent_stop'));
-app.get('/api/v1/torrent-remove', require('./app/controllers/torrent_remove'));
+app.get('/api/v1/torrent-list', passport.authenticate('basic', {session: false}), require('./app/controllers/torrent_list'));
+app.get('/api/v1/torrent-add', passport.authenticate('basic', {session: false}), require('./app/controllers/torrent_add'));
+app.get('/api/v1/torrent-start', passport.authenticate('basic', {session: false}), require('./app/controllers/torrent_start'));
+app.get('/api/v1/torrent-stop', passport.authenticate('basic', {session: false}), require('./app/controllers/torrent_stop'));
+app.get('/api/v1/torrent-remove', passport.authenticate('basic', {session: false}), require('./app/controllers/torrent_remove'));
 
-app.get('/api/v1/torrent-search', require('./app/controllers/torrent_search'));
-app.get('/api/v1/subtitle-search', require('./app/controllers/subtitle_search'));
+app.get('/api/v1/torrent-search', passport.authenticate('basic', {session: false}), require('./app/controllers/torrent_search'));
+app.get('/api/v1/subtitle-search', passport.authenticate('basic', {session: false}), require('./app/controllers/subtitle_search'));
 
-app.get('/api/v1/upload-from-url', require('./app/controllers/upload_from_file'));
-app.get('/api/v1/upload-subtitle', require('./app/controllers/upload_subtitle'));
+app.get('/api/v1/upload-from-url', passport.authenticate('basic', {session: false}), require('./app/controllers/upload_from_file'));
+app.get('/api/v1/upload-subtitle', passport.authenticate('basic', {session: false}), require('./app/controllers/upload_subtitle'));
 
 app.get('/api/v1/stream', require('./app/controllers/stream'));
-app.get('/api/v1/move', require('./app/controllers/move'));
-app.get('/api/v1/rename', require('./app/controllers/rename'));
-app.get(/^\/api\/v1\/ls\/?(.*)?$/, require('./app/controllers/ls'));
-app.get(/^\/api\/v1\/unlink\/?(.*)?$/, require('./app/controllers/unlink'));
-app.get(/^\/api\/v1\/mkdir\/?(.*)?$/, require('./app/controllers/mkdir'));
-app.get(/^\/api\/v1\/subtitle\/?(.*)?$/, require('./app/controllers/subtitle'));
-app.get(/^\/api\/v1\/extract\/?(.*)?$/, require('./app/controllers/extract'));
+app.get('/api/v1/move', passport.authenticate('basic', {session: false}), require('./app/controllers/move'));
+app.get('/api/v1/rename', passport.authenticate('basic', {session: false}), require('./app/controllers/rename'));
+app.get(/^\/api\/v1\/ls\/?(.*)?$/, passport.authenticate('basic', {session: false}), require('./app/controllers/ls'));
+app.get(/^\/api\/v1\/unlink\/?(.*)?$/, passport.authenticate('basic', {session: false}), require('./app/controllers/unlink'));
+app.get(/^\/api\/v1\/mkdir\/?(.*)?$/, passport.authenticate('basic', {session: false}), require('./app/controllers/mkdir'));
+app.get(/^\/api\/v1\/subtitle\/?(.*)?$/, passport.authenticate('basic', {session: false}), require('./app/controllers/subtitle'));
+app.get(/^\/api\/v1\/extract\/?(.*)?$/, passport.authenticate('basic', {session: false}), require('./app/controllers/extract'));
 
 // Lets go!
 var server = app.listen(config.app.port, function(){
