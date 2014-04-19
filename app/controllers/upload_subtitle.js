@@ -15,7 +15,7 @@ module.exports = function(req, res){
     var downloadUrl = req.query.url;
     var realPath = config.app.repository;
 
-    if (downloadUrl.indexOf('divxplanet')) {
+    if (downloadUrl.indexOf('divxplanet') > -1) {
         request(downloadUrl, function(error, response, body){
             if (error) {
                 console.log(error);
