@@ -81,6 +81,8 @@ module.exports = {
                     eta: eta,
                     addedDate: addedDate,
                     doneDate: doneDate,
+                    peersSendingToUs: item.peersSendingToUs,
+                    peersGettingFromUs: item.peersGettingFromUs,
                     isFinished: item.leftUntilDone == 0,
                     downloaded: Util.bytesToSize(item.totalSize - item.leftUntilDone, 2),
                     totalSize: Util.bytesToSize(item.totalSize, 2),
