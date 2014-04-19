@@ -188,11 +188,86 @@ $(function(){
     App.TorrentSearchController = Ember.ObjectController.extend({
         search: '',
         page: 0,
+        field: 'seeders',
+        fields: [
+            {
+                key: "time_add",
+                name: "Added Time"
+            },
+            {
+                key: "seeders",
+                name: "Seed"
+            },
+            {
+                key: "leechers",
+                name: "Leech"
+            },
+            {
+                key: "size",
+                name: "Size"
+            },
+            {
+                key: "file_count",
+                name: "Files"
+            }
+        ],
+        order: "desc",
+        order_list: [
+            {
+                key: "desc",
+                name: "DESC"
+            },
+            {
+                key: "asc",
+                name: "ASC"
+            }
+        ],
+        category: "all",
+        categories: [
+            {
+                key: "all",
+                name: "All"
+            },
+            {
+                key: "movies",
+                name: "Movie"
+            },
+            {
+                key: "tv",
+                name: "TV"
+            },
+            {
+                key: "anime",
+                name: "Anime"
+            },
+            {
+                key: "music",
+                name: "Music"
+            },
+            {
+                key: "books",
+                name: "Books"
+            },
+            {
+                key: "games",
+                name: "Games"
+            },
+            {
+                key: "applications",
+                name: "Applications"
+            }
+        ],
         torrents: [],
         actions: {
             search: function(){
                 var currentObject = this;
-                Ember.$.getJSON('/api/v1/torrent-search', { search: this.get('search'), page: this.get('page') }).then(function(torrents){
+                Ember.$.getJSON('/api/v1/torrent-search', {
+                    search: this.get('search'),
+                    page: this.get('page'),
+                    order: this.get('order'),
+                    field: this.get('field'),
+                    category: this.get('category')
+                }).then(function(torrents){
                     currentObject.set('torrents', torrents);
                 });
             },

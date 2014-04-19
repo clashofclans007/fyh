@@ -237,6 +237,18 @@
                         </span>
                     </div>
                 </div>
+                <div class="form-group">
+                    <div style="float: left;margin-top:5px; width: 150px;margin-right: 10px;">
+                        {{view Ember.Select content=fields optionValuePath="content.key" optionLabelPath="content.name" value=field class="form-control"}}
+                    </div>
+                    <div style="float: left;margin-top:5px; width: 150px;margin-right: 10px;">
+                        {{view Ember.Select content=order_list optionValuePath="content.key" optionLabelPath="content.name" value=order class="form-control"}}
+                    </div>
+                    <div style="float: left;margin-top:5px; width: 150px;">
+                        {{view Ember.Select content=categories optionValuePath="content.key" optionLabelPath="content.name" value=category class="form-control"}}
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
             </form>
         </div>
 

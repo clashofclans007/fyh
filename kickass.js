@@ -2,10 +2,10 @@ var _       = require('underscore');
 var Kickass = require('node-kickass');
 var util    = require('./util');
 
-module.exports = function(query, page, callback) {
+module.exports = function(query, page, sort, callback) {
     var kickass = new Kickass();
 
-    kickass.setQuery(query).setPage(page).run(function(errors, data) {
+    kickass.setQuery(query).setPage(page).setSort(sort).run(function(errors, data) {
         if (! errors.length > 0) {
             var torrents = [];
             _.each(data, function(item) {

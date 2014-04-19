@@ -7,8 +7,17 @@ module.exports = function(req, res){
 
     var page        = req.query.page || 0;
     var searchParam = req.query.search;
+    var category    = req.query.category;
+    var sort        = {
+        field: req.query.field,
+        sorder: req.query.order
+    };
 
-    kickass(searchParam, parseInt(page), function(err, torrents){
+    if (category != 'all') {
+        searchParam = searchParam + ' category:' + category;
+    }
+
+    kickass(searchParam, parseInt(page), sort, function(err, torrents){
         if (err) {
             console.log(err);
             res.send([]);
