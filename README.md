@@ -40,3 +40,17 @@ $ brew install icu4c
 $ ln -s /usr/local/Cellar/icu4c/<VERSION>/bin/icu-config /usr/local/bin/icu-config
 $ ln -s /usr/local/Cellar/icu4c/<VERSION>/include/unicode /usr/local/include
 ```
+
+### Ubuntu Server Setup (Ubuntu 14.04)
+
+```bash
+# apt-get install make g++ git transmission-daemon unrar libicu-dev
+# git clone https://github.com/omerucel/torrent-manager.git torrent-manager
+# curl https://raw.github.com/creationix/nvm/v0.5.0/install.sh | sh
+# nvm install 0.10.16
+# cd torrent-manager
+# npm install
+# service transmission-daemon stop
+# transmission-daemon -t -u username -v password
+# nohup node server.js > ../output.log &
+```
