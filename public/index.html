@@ -217,7 +217,7 @@
 
     <script type="text/x-handlebars" id="video">
         <div style="text-align:center; width: 100%; height:100%;">
-            <video controls width="90%" height="90%">
+            <video controls width="640px" height="480px">
                 {{#if subtitle}}
                     <track kind="subtitles" label="{{unbound subtitle.name}}" src="/api/v1/subtitle{{unbound subtitle.path}}" default></track>
                 {{/if}}
