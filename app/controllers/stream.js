@@ -30,21 +30,32 @@ module.exports = function(req, res){
 
         console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize);
 
-        var file = fs.createReadStream(realPath, {start: start, end: end});
-
         res.writeHead(206
             , { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total
                 , 'Accept-Ranges': 'bytes', 'Content-Length': chunksize
                 , 'Content-Type': contentType
             });
-        file.pipe(res);
-    }
-    else {
+
+        var stream = fs.createReadStream(realPath, {start: start, end: end});
+    } else {
         console.log('ALL: ' + total);
         res.writeHead(200
             , { 'Content-Length': total
                 , 'Content-Type': contentType
             });
-        fs.createReadStream(realPath).pipe(res);
+        var stream = fs.createReadStream(realPath);
     }
+
+    stream.on('open', function(){
+        stream.pipe(res);
+    });
+
+    stream.on('error', function(err){
+        console.log(err);
+        res.destroy();
+    });
+
+    res.on('close', function(){
+        stream.destroy();
+    });
 };
