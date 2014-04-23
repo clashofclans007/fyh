@@ -286,10 +286,17 @@ $(function(){
 
     // Torrent Search Item
     App.TorrentSearchItemController = Ember.ObjectController.extend({
+        html: '',
         actions: {
             start: function(){
                 Ember.$.getJSON('/api/v1/torrent-add', { magnet: this.get('magnet') }).then(function(){
                     alertify.success('Torrent added to the downoad manager!');
+                });
+            },
+            showFiles: function(){
+                var currentObject = this;
+                Ember.$.getJSON('/api/v1/get-torrent-files', { link: this.get('link') }).then(function(response){
+                    currentObject.set('html', response.html);
                 });
             }
         }

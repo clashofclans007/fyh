@@ -12,6 +12,7 @@ module.exports = function(query, page, sort, callback) {
                 torrents.push({
                     name: item.title,
                     date: item.date,
+                    link: item.link,
                     magnet: item['torrent:magneturi']['#'],
                     seeders: item['torrent:seeds']['#'],
                     leechers: item['torrent:peers']['#'],

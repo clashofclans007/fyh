@@ -281,7 +281,12 @@
             <td>
                 <strong>{{name}}</strong>
                 <div style="margin-top:10px;">
-                    <a href="javascript:;" {{action 'start'}}>Start Download</a> - {{size}} - {{date}}
+                    <a href="javascript:;" {{action 'start'}}>Start Download</a> -
+                    <a href="javascript:;" {{action 'showFiles'}}>Show Files</a> -
+                    {{size}} - {{date}}
+                </div>
+                <div style="margin-top:10px">
+                    {{{html}}}
                 </div>
             </td>
             <td>{{seeders}}</td>
