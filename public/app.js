@@ -259,6 +259,10 @@ $(function(){
         ],
         torrents: [],
         actions: {
+            clearPageAndSearch: function(){
+                this.set('page', 0);
+                this.send('search');
+            },
             search: function(){
                 var currentObject = this;
                 Ember.$.getJSON('/api/v1/torrent-search', {
@@ -320,6 +324,10 @@ $(function(){
             }
         ],
         actions: {
+            clearPageAndSearch: function(){
+                this.set('page', 0);
+                this.send('search');
+            },
             search: function(){
                 var currentObject = this;
                 Ember.$.getJSON('/api/v1/subtitle-search', { search: this.get('search'), lang: this.get('language'), source: this.get('source'), page: this.get('page') }).then(function(subtitles){
