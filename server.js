@@ -46,7 +46,7 @@ app.get('/api/v1/torrent-search', passport.authenticate('basic', {session: false
 app.get('/api/v1/subtitle-search', passport.authenticate('basic', {session: false}), require('./app/controllers/subtitle_search'));
 app.get('/api/v1/get-torrent-files', passport.authenticate('basic', {session: false}), require('./app/controllers/get_torrent_files'));
 
-app.get('/api/v1/upload-from-url', passport.authenticate('basic', {session: false}), require('./app/controllers/upload_from_file'));
+app.get('/api/v1/upload-from-url', passport.authenticate('basic', {session: false}), require('./app/controllers/upload_from_url'));
 app.get('/api/v1/upload-subtitle', passport.authenticate('basic', {session: false}), require('./app/controllers/upload_subtitle'));
 
 app.get('/api/v1/stream', require('./app/controllers/stream'));

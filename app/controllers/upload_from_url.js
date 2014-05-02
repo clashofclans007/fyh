@@ -1,7 +1,5 @@
 /**
  * Verilen bağlantıdaki dosyayı isteğin yapıldığı sırada bulunulan dizine indirir.
- *
- * TODO : Dosya adı bulunmayan bağlantılarda sorun çıkabilir.
  */
 
 var path    = require('path');
@@ -15,20 +13,24 @@ module.exports = function(req, res){
     res.header("Pragma", "no-cache");
     res.header("Expires", 0);
 
-    var currentPath = path.normalize(req.query.path || '/');
-    var realPath = config.app.repository + currentPath;
+    var downloadUrl = req.query.url.toString();
+    var downloadPath = '/' + path.normalize(req.query.path);
+    var realDownloadPath = path.normalize(config.app.repository + downloadPath);
 
-    var downloadUrl = req.query.url;
-    var parsedUrl = url.parse(downloadUrl);
-    var basename = path.basename(parsedUrl.pathname);
-    var newFilePath = realPath + '/' + basename;
-
-    request(downloadUrl, function(error, response, body){
+    request.get(downloadUrl, function(error, response, body){
         if (error) {
             res.send({});
             return;
         }
 
+        try {
+            var filename = response.headers['content-disposition'].match(/filename=\"(.*)\"/)[1];
+        } catch (err) {
+            var parsedUrl = url.parse(downloadUrl);
+            var filename = path.basename(parsedUrl.pathname);
+        }
+
+        var newFilePath = realDownloadPath + '/' + filename;
         fs.writeFileSync(newFilePath, body);
         res.send({});
     });
