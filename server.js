@@ -50,6 +50,7 @@ app.get('/api/v1/upload-from-url', passport.authenticate('basic', {session: fals
 app.get('/api/v1/upload-subtitle', passport.authenticate('basic', {session: false}), require('./app/controllers/upload_subtitle'));
 
 app.get('/api/v1/stream', require('./app/controllers/stream'));
+app.get('/api/v1/download', require('./app/controllers/download'));
 app.get('/api/v1/move', passport.authenticate('basic', {session: false}), require('./app/controllers/move'));
 app.get('/api/v1/rename', passport.authenticate('basic', {session: false}), require('./app/controllers/rename'));
 app.get(/^\/api\/v1\/ls\/?(.*)?$/, passport.authenticate('basic', {session: false}), require('./app/controllers/ls'));
