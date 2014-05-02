@@ -11,7 +11,7 @@ var config          = require('./config');
 
 passport.use(new BasicStrategy(
   function(username, password, done) {
-    if (username !== config.app.username && password !== config.app.password) {
+    if (username !== config.app.username || password !== config.app.password) {
         return done(null, false);
     }
 
