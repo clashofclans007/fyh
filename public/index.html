@@ -195,9 +195,8 @@
 
                     {{#if isVideo}}
                         <a href="javascript:;" {{action 'watch' path contentType}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-video-camera"></span> Watch</a>
+                        <a href="javascript:;" {{action 'findSubtitle'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-video-camera"></span> Find Subtitle</a>
                     {{/if}}
-
-                    <a href="javascript:;" {{action 'transcode'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-video-camera"></span> Transcode</a>
 
                     {{#if isSubtitle}}
                         {{#if isSelectedSubtitle}}

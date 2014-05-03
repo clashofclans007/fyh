@@ -48,6 +48,7 @@ app.get('/api/v1/get-torrent-files', passport.authenticate('basic', {session: fa
 
 app.get('/api/v1/upload-from-url', passport.authenticate('basic', {session: false}), require('./app/controllers/upload_from_url'));
 app.get('/api/v1/upload-subtitle', passport.authenticate('basic', {session: false}), require('./app/controllers/upload_subtitle'));
+app.get('/api/v1/find-subtitle-from-file', passport.authenticate('basic', {session: false}), require('./app/controllers/find_subtitle_from_file'));
 
 app.get('/api/v1/stream', require('./app/controllers/stream'));
 app.get('/api/v1/transcode', require('./app/controllers/transcode'));

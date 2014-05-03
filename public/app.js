@@ -124,6 +124,13 @@ $(function(){
                     alertify.success('File transcoded!');
                     currentObject.get('controllers.file-manager').send('refresh');
                 });
+            },
+            findSubtitle: function() {
+                var currentObject = this;
+                Ember.$.getJSON('/api/v1/find-subtitle-from-file', { path: this.get('path')}).then(function(response){
+                    alertify.success('Search completed!');
+                    currentObject.get('controllers.file-manager').send('refresh');
+                });
             }
         }
     });
