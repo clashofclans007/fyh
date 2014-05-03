@@ -28,8 +28,6 @@ module.exports = function(req, res){
             , end = partialend ? parseInt(partialend, 10) : total-1
             , chunksize = (end-start)+1;
 
-        console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize);
-
         res.writeHead(206
             , { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total
                 , 'Accept-Ranges': 'bytes', 'Content-Length': chunksize
@@ -38,7 +36,6 @@ module.exports = function(req, res){
 
         var stream = fs.createReadStream(realPath, {start: start, end: end});
     } else {
-        console.log('ALL: ' + total);
         res.writeHead(200
             , { 'Content-Length': total
                 , 'Content-Type': contentType

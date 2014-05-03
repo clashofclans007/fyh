@@ -117,6 +117,13 @@ $(function(){
                 this.get('controllers.video').set('path', path);
                 this.get('controllers.video').set('contentType', contentType);
                 this.transitionToRoute('video');
+            },
+            transcode: function() {
+                var currentObject = this;
+                Ember.$.getJSON('/api/v1/transcode', { path: this.get('path')}).then(function(response){
+                    alertify.success('File transcoded!');
+                    currentObject.get('controllers.file-manager').send('refresh');
+                });
             }
         }
     });

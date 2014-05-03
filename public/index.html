@@ -197,6 +197,8 @@
                         <a href="javascript:;" {{action 'watch' path contentType}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-video-camera"></span> Watch</a>
                     {{/if}}
 
+                    <a href="javascript:;" {{action 'transcode'}} class="pull-left" style="margin-right: 10px;"><span class="fa fa-video-camera"></span> Transcode</a>
+
                     {{#if isSubtitle}}
                         {{#if isSelectedSubtitle}}
                             <a href="javascript:;" class="pull-left" {{action 'unsetSubtitle'}}><span class="fa fa-bars"></span> Unset Subtitle</a>

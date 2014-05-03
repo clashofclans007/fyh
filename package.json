@@ -18,6 +18,7 @@
     "node-kickass": "latest",
     "transmission": "latest",
     "passport": "latest",
-    "passport-http": "latest"
+    "passport-http": "latest",
+    "fluent-ffmpeg": "latest"
   }
 }
